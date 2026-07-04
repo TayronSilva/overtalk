@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>Neural Link - Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030408;
+            --accent: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.4);
+            --mic: #10b981;
+            --text: #f8fafc;
+            --glass: rgba(15, 20, 35, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Animated Mesh Background */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(29, 78, 216, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
+            z-index: -1;
+            animation: meshAnim 20s infinite alternate;
+        }
+
+        @keyframes meshAnim { 
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .container {
+            width: 900px;
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            padding: 40px;
+            border-radius: 32px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(255, 255, 255, 0.02);
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-box {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 24px;
+            box-shadow: 0 0 25px var(--accent-glow);
+        }
+
+        h1 { font-size: 32px; margin: 0; font-weight: 700; letter-spacing: -1px; }
+        h1 span { font-weight: 300; opacity: 0.6; }
+
+        .btn-main {
+            padding: 18px 30px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-main:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-main.stop {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .node-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--card-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--accent);
+        }
+        .node-card.mic::before { background: var(--mic); }
+
+        .label {
+            font-size: 11px; font-weight: 800; color: var(--accent);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .node-card.mic .label { color: var(--mic); }
+
+        .status-badge {
+            font-size: 10px; background: rgba(255, 255, 255, 0.05); padding: 4px 10px;
+            border-radius: 20px; border: 1px solid var(--card-border);
+        }
+
+        .v-bar-container { height: 8px; background: rgba(0,0,0,0.3); border-radius: 10px; overflow: hidden; margin-top: 20px; }
+        .v-bar { height: 100%; width: 0%; transition: width 0.1s ease; border-radius: 10px; }
+        #volumeBar { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        #volumeBarMic { background: var(--mic); box-shadow: 0 0 15px var(--mic); }
+
+        #log {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #a5f3fc;
+            height: 180px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        #log::-webkit-scrollbar { width: 6px; }
+        #log::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+
+        .speaker-mgmt { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--card-border); }
+        .input-neural {
+            background: rgba(0,0,0,0.3); border: 1px solid var(--card-border);
+            border-radius: 8px; padding: 10px; color: white; width: 100%;
+            margin-bottom: 10px; outline: none; transition: border 0.3s;
+        }
+        .input-neural:focus { border-color: var(--accent); }
+
+        .btn-action {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+            color: white; padding: 8px 15px; border-radius: 8px; font-size: 12px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .btn-action:hover { background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg"></div>
+    <div class="container">
+        <header>
+            <div class="brand">
+                <div class="logo-box">N</div>
+                <h1>NEURAL <span>LINK</span></h1>
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <button id="btnCapture" class="btn-main">Iniciar Sistema</button>
+                <button id="btnStop" class="btn-main stop" style="display:none">Desligar</button>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="node-card system">
+                <div class="label">Native Stream <span class="status-badge" id="statusVAD">IDLE</span></div>
+                <div class="v-bar-container"><div id="volumeBar" class="v-bar"></div></div>
+                
+                <div class="speaker-mgmt">
+                    <input type="text" id="speakerName" class="input-neural" placeholder="Registrar Voz (Ex: Ceci)">
+                    <div style="display: flex; gap: 8px;">
+                        <button id="btnRegisterVoice" class="btn-action">Memorizar</button>
+                        <button id="btnClearSpeakers" class="btn-action" style="color: #ef4444;">Limpar BD</button>
+                    </div>
+                    <div id="registerStatus" style="font-size: 11px; margin-top: 8px; color: var(--accent); font-weight: 600;"></div>
+                    <div id="speakerList" style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 5px;"></div>
+                </div>
+            </div>
+
+            <div class="node-card mic">
+                <div class="label">Seu Microfone <span class="status-badge" id="statusVADMic">IDLE</span></div>
+                <div class="v-bar-container"><div id="volumeBarMic" class="v-bar"></div></div>
+                <div style="margin-top: 25px;">
+                    <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 15px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--card-border);">
+                        <input type="checkbox" id="chkPTT" checked style="accent-color: var(--mic); width: 16px; height: 16px; cursor: pointer;">
+                        🚀 ATIVAR PTT GLOBAL (Right Shift)
+                    </label>
+                    <div style="font-size: 10px; opacity: 0.5; margin-bottom: 8px; text-transform: uppercase;">Sensibilidade</div>
+                    <input type="range" id="rangeSensitivity" min="0.001" max="0.05" step="0.001" value="0.01" style="width: 100%; accent-color: var(--mic);">
+                </div>
+                <button id="btnPiP" class="btn-action" style="margin-top: 20px; width: 100%;">Ativar Overlay Dashboard</button>
+            </div>
+        </div>
+
+        <div id="log">Aguardando ativação do Neural Link... <br>> Sistemas prontos para tradução biométrica.</div>
+    </div>
+
+    <!-- Hidden PiP Elements -->
+    <canvas id="pipCanvas" width="200" height="100" style="display:none"></canvas>
+    <video id="pipVideo" autoplay muted style="display:none"></video>
+
+    <script src="capture.js"></script>
+</body>
+</html>

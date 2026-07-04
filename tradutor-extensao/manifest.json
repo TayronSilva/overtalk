@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Live Local Translator",
+  "version": "1.0",
+  "description": "Tradutor Inteligente de Abas (Universal para Firefox e Chrome).",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Abrir Tradutor"
+  }
+}

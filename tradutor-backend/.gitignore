@@ -1,0 +1,6 @@
+node_modules/
+.env
+.cache/
+speakers.json
+lt_out.txt
+*.log
