@@ -1,0 +1,274 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OverTalk | Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#353437",
+                    "inverse-primary": "#855300",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-background": "#e5e1e4",
+                    "on-error": "#690005",
+                    "surface-container": "#201f22",
+                    "on-primary-fixed-variant": "#653e00",
+                    "inverse-on-surface": "#313032",
+                    "secondary": "#bac8dc",
+                    "on-tertiary-fixed-variant": "#3c475d",
+                    "primary": "#ffc174",
+                    "on-primary-fixed": "#2a1700",
+                    "inverse-surface": "#e5e1e4",
+                    "surface-container-low": "#1c1b1e",
+                    "surface-container-high": "#2a2a2c",
+                    "secondary-fixed": "#d6e4f9",
+                    "error-container": "#93000a",
+                    "background": "#08080a",
+                    "tertiary-fixed": "#d7e2ff",
+                    "primary-fixed": "#ffddb8",
+                    "surface-bright": "#39393b",
+                    "surface-dim": "#131315",
+                    "secondary-fixed-dim": "#bac8dc",
+                    "on-primary": "#472a00",
+                    "on-surface-variant": "#d8c3ad",
+                    "on-error-container": "#ffdad6",
+                    "primary-fixed-dim": "#ffb95f",
+                    "outline-variant": "#534434",
+                    "outline": "#a08e7a",
+                    "tertiary-fixed-dim": "#bbc6e2",
+                    "on-tertiary": "#263046",
+                    "tertiary-container": "#a6b1cc",
+                    "on-secondary-container": "#a8b6ca",
+                    "surface-variant": "#353437",
+                    "on-secondary-fixed": "#0f1c2c",
+                    "surface": "#131315",
+                    "secondary-container": "#3a4859",
+                    "on-tertiary-fixed": "#101b30",
+                    "on-primary-container": "#613b00",
+                    "primary-container": "#f59e0b",
+                    "tertiary": "#c1cce8",
+                    "on-surface": "#e5e1e4",
+                    "on-secondary-fixed-variant": "#3a4859",
+                    "surface-tint": "#ffb95f",
+                    "error": "#ffb4ab",
+                    "on-tertiary-container": "#39445a",
+                    "on-secondary": "#243141"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "base": "8px",
+                    "stack-sm": "12px",
+                    "stack-md": "24px",
+                    "container-padding-desktop": "40px",
+                    "container-padding-mobile": "20px",
+                    "stack-lg": "48px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Space Grotesk"],
+                    "translation-text": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Space Grotesk"],
+                    "display-lg": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "translation-text": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #08080a;
+            color: #e5e1e4;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(13, 27, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .amber-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0) 70%);
+            filter: blur(40px);
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        .primary-btn {
+            background: linear-gradient(to bottom, #f59e0b, #d97706);
+            border: 1px solid #fbbf24;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.25);
+        }
+
+        .primary-btn:active {
+            transform: scale(0.98);
+        }
+
+        .input-cutout {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #1b263b;
+            transition: all 0.3s ease;
+        }
+
+        .input-cutout:focus {
+            outline: none;
+            border-bottom: 1px solid #f59e0b;
+            box-shadow: 0 4px 12px -6px rgba(245, 158, 11, 0.2);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-center items-center font-body-md px-container-padding-mobile md:px-0">
+<!-- Ambient Background Effects -->
+<div class="amber-glow top-[-100px] left-[-100px]"></div>
+<div class="amber-glow bottom-[-150px] right-[-50px]"></div>
+<!-- Main Content Container -->
+<main class="w-full max-w-[440px] z-10">
+<!-- Brand Identity -->
+<div class="flex flex-col items-center mb-stack-lg">
+<div class="mb-4">
+<span class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary tracking-tighter"></span>
+</div>
+</div>
+<!-- Login Card -->
+<div class="glass-card w-full rounded-xl p-8 md:p-10" style="--mouse-x: 108px; --mouse-y: 571px;">
+<header class="mb-8">
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-on-surface mb-2">Criar Conta</h1>
+<p class="text-on-surface-variant font-body-md opacity-80">Inicie sua Jornada de comunicação global</p>
+</header>
+<!-- Google Login Button -->
+<button class="w-full flex items-center justify-center gap-3 bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant text-on-surface py-3 px-4 rounded-lg transition-all duration-200 mb-stack-md group">
+<svg fill="none" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 12-4.53z" fill="#EA4335"></path>
+</svg>
+<span class="font-medium">Registar com Google</span>
+</button>
+<!-- Divider -->
+<div class="flex items-center gap-4 mb-stack-md">
+<div class="h-[1px] flex-1 bg-outline-variant opacity-30"></div>
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-widest">ou</span>
+<div class="h-[1px] flex-1 bg-outline-variant opacity-30"></div>
+</div>
+<!-- Credentials Form -->
+<form action="#" class="space-y-6">
+<!-- Email Field -->
+<div class="relative group">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2 group-focus-within:text-primary transition-colors" for="email">E-mail</label>
+<input class="w-full input-cutout py-3 text-on-surface placeholder:text-surface-container-highest transition-all" id="email" placeholder="nome@exemplo.com" required="" type="email">
+</div>
+<!-- Password Field -->
+<div class="relative group">
+<div class="flex justify-between items-center mb-2">
+<label class="text-label-caps font-label-caps text-on-surface-variant group-focus-within:text-primary transition-colors" for="password">Senha</label>
+
+</div>
+<div class="relative">
+<input class="w-full input-cutout py-3 text-on-surface placeholder:text-surface-container-highest transition-all pr-10" id="password" placeholder="••••••••" required="" type="password">
+<button class="absolute right-0 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors p-2" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined text-[20px]" id="password-toggle-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full primary-btn text-on-primary font-bold py-4 rounded-lg flex items-center justify-center gap-2 mt-stack-md" type="submit">
+<span class="">Registrar</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</form>
+</div>
+<!-- Footer Actions -->
+<footer class="mt-stack-md flex justify-center w-full">
+<p class="text-on-surface-variant font-body-md">sdas<a class="text-primary font-semibold hover:underline ml-1" href="#">Já tenho uam conta</a></p>
+</footer>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('password-toggle-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.innerText = 'visibility_off';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.innerText = 'visibility';
+            }
+        }
+
+        // Atmospheric mouse track glow (subtle)
+        document.addEventListener('mousemove', (e) => {
+            const card = document.querySelector('.glass-card');
+            if (!card) return;
+            
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    </script>
+<!-- Top AppBar Style Mapping from JSON (Visual Only for Login Screen) -->
+<div class="fixed top-0 left-0 w-full flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop py-stack-sm pointer-events-none opacity-40">
+<div class="font-display-lg text-primary tracking-tighter text-[24px]">OverTalk</div>
+<div class="text-on-surface-variant">
+<span class="material-symbols-outlined">help_outline</span>
+</div>
+</div>
+<!-- Footer Copyright Mapping from JSON -->
+<div class="fixed bottom-0 left-0 w-full flex flex-col md:flex-row justify-between items-center px-container-padding-mobile md:px-container-padding-desktop py-stack-md gap-4 opacity-30 pointer-events-none">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">© 2024 OverTalk AI. Precision Guaranteed.</span>
+<div class="flex gap-4 font-label-caps text-label-caps text-on-surface-variant uppercase">
+<span class="">Privacy</span>
+<span class="">Security</span>
+<span class="">Terms</span>
+</div>
+</div>
+
+
+
+
+</body></html>

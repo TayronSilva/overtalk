@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OverTalk | Pagamento Seguro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(13, 27, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-button {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+            transition: all 0.3s ease;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+            transform: translateY(-1px);
+        }
+        .input-cutout {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #1b263b;
+            transition: border-color 0.3s ease;
+        }
+        .input-cutout:focus {
+            outline: none;
+            border-bottom-color: #ffc174;
+            box-shadow: 0 4px 12px -6px rgba(255, 193, 116, 0.3);
+        }
+        body {
+            background-color: #08080a;
+            color: #e5e1e4;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed": "#101b30",
+                      "on-tertiary-container": "#39445a",
+                      "surface-container-high": "#2a2a2c",
+                      "surface-container": "#201f22",
+                      "surface-variant": "#353437",
+                      "primary": "#ffc174",
+                      "inverse-surface": "#e5e1e4",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed": "#d7e2ff",
+                      "secondary-fixed": "#d6e4f9",
+                      "tertiary": "#c1cce8",
+                      "secondary-fixed-dim": "#bac8dc",
+                      "surface-container-highest": "#353437",
+                      "on-primary-container": "#613b00",
+                      "error-container": "#93000a",
+                      "inverse-primary": "#855300",
+                      "on-primary": "#472a00",
+                      "surface-tint": "#ffb95f",
+                      "on-secondary-container": "#a8b6ca",
+                      "tertiary-container": "#a6b1cc",
+                      "surface-dim": "#131315",
+                      "on-primary-fixed-variant": "#653e00",
+                      "surface-container-lowest": "#0e0e10",
+                      "surface-bright": "#39393b",
+                      "primary-fixed": "#ffddb8",
+                      "on-tertiary": "#263046",
+                      "surface": "#131315",
+                      "outline": "#a08e7a",
+                      "on-tertiary-fixed-variant": "#3c475d",
+                      "primary-fixed-dim": "#ffb95f",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed": "#0f1c2c",
+                      "on-surface-variant": "#d8c3ad",
+                      "on-secondary-fixed-variant": "#3a4859",
+                      "on-secondary": "#243141",
+                      "inverse-on-surface": "#313032",
+                      "surface-container-low": "#1c1b1e",
+                      "primary-container": "#f59e0b",
+                      "secondary-container": "#3a4859",
+                      "outline-variant": "#534434",
+                      "on-primary-fixed": "#2a1700",
+                      "background": "#131315",
+                      "secondary": "#bac8dc",
+                      "on-background": "#e5e1e4",
+                      "tertiary-fixed-dim": "#bbc6e2",
+                      "on-error": "#690005",
+                      "on-surface": "#e5e1e4"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-md": "24px",
+                      "gutter": "24px",
+                      "container-padding-desktop": "40px",
+                      "base": "8px",
+                      "stack-sm": "12px",
+                      "stack-lg": "48px",
+                      "container-padding-mobile": "20px"
+              },
+              "fontFamily": {
+                      "translation-text": ["Inter"],
+                      "body-md": ["Inter"],
+                      "display-lg-mobile": ["Space Grotesk"],
+                      "display-lg": ["Space Grotesk"],
+                      "label-caps": ["JetBrains Mono"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Space Grotesk"]
+              },
+              "fontSize": {
+                      "translation-text": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="min-h-screen overflow-x-hidden font-body-md text-body-md bg-background">
+<!-- Background Shader Atmosphere -->
+
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-gutter py-4 max-w-[800px] mx-auto">
+<div class="flex items-center gap-4">
+<button class="cursor-pointer active:scale-95 text-on-surface-variant hover:text-primary transition-colors flex items-center" onclick="window.location.href='conta.html'">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-display-lg text-primary tracking-tighter text-2xl lg:text-3xl">OverTalk</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="lock">lock</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest hidden md:inline">Pagamento Seguro</span>
+</div>
+</div>
+</header>
+<main class="relative z-10 pt-24 pb-32 px-container-padding-mobile md:px-0">
+<div class="max-w-[800px] mx-auto">
+<!-- Bento Layout Container -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<!-- Left Column: Payment Form -->
+<div class="md:col-span-7 flex flex-col gap-stack-md">
+<section class="glass-panel p-8 rounded-xl shadow-2xl">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="credit_card">credit_card</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Dados do Cartão</h2>
+</div>
+<form class="space-y-8" id="payment-form">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant/70 block">NOME DO TITULAR</label>
+<input class="input-cutout w-full py-2 font-body-md text-on-surface placeholder:text-on-surface-variant/30" placeholder="Como impresso no cartão" required="" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant/70 block">NÚMERO DO CARTÃO</label>
+<div class="relative">
+<input class="input-cutout w-full py-2 font-body-md text-on-surface placeholder:text-on-surface-variant/30" id="card-number" placeholder="0000 0000 0000 0000" required="" type="text"/>
+<div class="absolute right-0 bottom-2 flex gap-2">
+<div class="w-8 h-5 bg-white/5 rounded border border-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-xs opacity-50" data-icon="credit_card">credit_card</span>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant/70 block">VALIDADE</label>
+<input class="input-cutout w-full py-2 font-body-md text-on-surface placeholder:text-on-surface-variant/30" placeholder="MM/AA" required="" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant/70 block">CVV</label>
+<div class="relative">
+<input class="input-cutout w-full py-2 font-body-md text-on-surface placeholder:text-on-surface-variant/30" maxlength="3" placeholder="•••" required="" type="password"/>
+<span class="material-symbols-outlined absolute right-0 bottom-2 text-on-surface-variant/50 text-sm cursor-help" data-icon="help_outline">help_outline</span>
+</div>
+</div>
+</div>
+<div class="pt-8">
+<button class="glow-button w-full py-5 rounded-full bg-gradient-to-b from-primary-container to-[#d97706] text-on-primary font-headline-md text-lg flex items-center justify-center gap-3 border border-[#fbbf24] active:scale-95" type="submit">
+                                    Finalizar Assinatura
+                                    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<p class="text-center mt-4 text-[11px] text-on-surface-variant/50 font-label-caps">PROCESSO CRIPTOGRAFADO DE PONTA A PONTA</p>
+</div>
+</form>
+</section>
+<!-- Trust Badges -->
+<div class="flex items-center justify-center gap-8 py-4 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xl" data-icon="verified_user">verified_user</span>
+<span class="font-label-caps text-[10px] tracking-widest">SSL SECURE</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xl" data-icon="security">security</span>
+<span class="font-label-caps text-[10px] tracking-widest">PCI COMPLIANT</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-xl" data-icon="encrypted">encrypted</span>
+<span class="font-label-caps text-[10px] tracking-widest">256-BIT AES</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Order Summary -->
+<aside class="md:col-span-5 flex flex-col gap-6">
+<section class="glass-panel p-8 rounded-xl border border-white/5">
+<h3 class="font-headline-md text-lg text-on-surface mb-6 border-b border-white/10 pb-4">Resumo do Pedido</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-on-surface font-medium order-summary-name">Plano Profissional</p>
+<p class="text-on-surface-variant/60 text-sm">Faturamento mensal</p>
+</div>
+<span class="font-label-caps text-primary order-summary-preco">R$ 5,00</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-on-surface-variant/60 text-sm">Suporte Prioritário</span>
+<span class="font-label-caps text-[10px] bg-white/5 px-2 py-0.5 rounded text-on-surface-variant">INCLUSO</span>
+</div>
+<div class="flex justify-between items-center py-2">
+<span class="text-on-surface-variant/60 text-sm">Tradução Ilimitada</span>
+<span class="font-label-caps text-[10px] bg-white/5 px-2 py-0.5 rounded text-on-surface-variant">INCLUSO</span>
+</div>
+<div class="h-px bg-white/10 my-4"></div>
+<div class="flex justify-between items-end">
+<span class="text-on-surface font-bold">Total</span>
+<div class="text-right">
+<p class="text-primary font-headline-md text-2xl order-summary-total">R$ 5,00</p>
+<p class="text-[10px] text-on-surface-variant/40 font-label-caps uppercase tracking-tighter">COBRADO AGORA</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Accent Card -->
+<div class="relative overflow-hidden rounded-xl h-48 glass-panel group">
+<div class="absolute inset-0 z-0 opacity-40">
+<div class="absolute inset-0 bg-gradient-to-tr from-[#0d1b2a] to-transparent"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A macro close-up of a high-tech gold and glass circuit board with soft amber glowing particles floating in a deep black space. The lighting is moody and cinematic, emphasizing the precision and premium engineering of a translation supercomputer. Dark teal and gold color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyeCWfCYpGTTGMmsvIPr7bsQU4n7-dIA54qjSoDRJLZkQQ2p0pBc5t3CNXvCE6Knl_6vnB99Hx2mSDDYoODoj4HgHJUI4QrPCiBraiFRuawIZ2EQt000_Xt1CuW9rX81S-HSHBVhCRiFM9d4XDa97YRXI1yD1-4by-0G9Hh2-7hHQMbZ_IShxe499TW0UEMhp_MA8DyMI3o9v78zSw6pDSu94TR1G379IHF7d1q05yebHLr2vJbXNXEg"/>
+</div>
+<div class="relative z-10 p-6 h-full flex flex-col justify-end">
+<p class="text-primary font-label-caps text-[10px] tracking-widest mb-1">GLOBAL COMMUNICATION</p>
+<p class="text-on-surface font-headline-md text-sm leading-tight">Potencialize sua voz em 120+ idiomas sem limites.</p>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</main>
+<!-- Success Interaction Script -->
+<script>
+        // Define planos por parâmetro da URL
+        const planos = {
+            profissional: { nome: 'Profissional', preco: 'R$ 5,00', total: 'R$ 5,00' },
+            poweruser: { nome: 'Power User', preco: 'R$ 10,00', total: 'R$ 10,00' },
+            corporate: { nome: 'Corporate', preco: 'R$ 15,00', total: 'R$ 15,00' }
+        };
+        const params = new URLSearchParams(window.location.search);
+        const planoKey = params.get('plano') || 'profissional';
+        const plano = planos[planoKey] || planos.profissional;
+
+        document.querySelector('.order-summary-name').textContent = 'Plano ' + plano.nome;
+        document.querySelector('.order-summary-preco').textContent = plano.preco;
+        document.querySelector('.order-summary-total').textContent = plano.total;
+
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalContent = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin" data-icon="sync">sync</span> Processando...';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span> Sucesso!';
+                btn.classList.replace('bg-gradient-to-b', 'bg-green-600');
+                
+                setTimeout(() => {
+                    alert('Pagamento processado com sucesso! Bem-vindo ao Plano ' + plano.nome + ' OverTalk.');
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            }, 2000);
+        });
+
+        // Simple credit card formatting
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '');
+            let formatted = '';
+            for (let i = 0; i < val.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += val[i];
+            }
+            e.target.value = formatted.substring(0, 19);
+        });
+    </script>
+</body></html>

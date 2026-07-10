@@ -422,6 +422,8 @@
                 <input type="number" class="pin-digit" id="d1" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
                 <input type="number" class="pin-digit" id="d2" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
                 <input type="number" class="pin-digit" id="d3" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
+                <input type="number" class="pin-digit" id="d4" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
+                <input type="number" class="pin-digit" id="d5" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
             </div>
 
             <button id="btnConnect" class="btn-connect">Entrar na Sala</button>
@@ -487,7 +489,7 @@
     const micBtn       = document.getElementById('micBtn');
 
     // ─── PIN Digit Navigation ───
-    const digits = [document.getElementById('d0'), document.getElementById('d1'), document.getElementById('d2'), document.getElementById('d3')];
+    const digits = [document.getElementById('d0'), document.getElementById('d1'), document.getElementById('d2'), document.getElementById('d3'), document.getElementById('d4'), document.getElementById('d5')];
     digits.forEach((d, i) => {
         d.addEventListener('input', () => {
             const val = d.value.replace(/[^0-9]/g, '');
@@ -642,9 +644,7 @@
                 body: merged.buffer
             }).then(r => r.json()).then(json => {
                 document.getElementById('micStatus').innerText = '✓ Enviado';
-                if (json.translated && json.translated.trim()) {
-                    addBubble('mic', json.original, json.translated, false, json.speaker);
-                }
+                // SSE já exibe a tradução via broadcastEvent — não duplicar aqui
             }).catch(() => {
                 document.getElementById('micStatus').innerText = '✗ Erro';
             }).finally(() => {
@@ -669,7 +669,7 @@
         const pin = getPIN();
         const err = document.getElementById('pinError');
 
-        if (pin.length !== 4) { err.innerText = 'Digite todos os 4 dígitos.'; return; }
+        if (pin.length !== 6) { err.innerText = 'Digite todos os 6 dígitos.'; return; }
         err.innerText = 'Verificando...';
 
         try {

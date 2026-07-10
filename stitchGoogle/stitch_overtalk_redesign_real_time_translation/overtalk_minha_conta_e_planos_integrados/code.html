@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Minha Conta | OverTalk AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..900&amp;family=Space+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#131315",
+                    "inverse-on-surface": "#313032",
+                    "on-background": "#e5e1e4",
+                    "on-tertiary-fixed-variant": "#3c475d",
+                    "on-error": "#690005",
+                    "outline-variant": "#534434",
+                    "surface": "#131315",
+                    "on-primary": "#472a00",
+                    "on-secondary-container": "#a8b6ca",
+                    "surface-container-low": "#1c1b1e",
+                    "surface-container-high": "#2a2a2c",
+                    "on-tertiary": "#263046",
+                    "surface-bright": "#39393b",
+                    "surface-container": "#201f22",
+                    "on-primary-fixed": "#2a1700",
+                    "primary-fixed-dim": "#ffb95f",
+                    "secondary-fixed": "#d6e4f9",
+                    "primary-fixed": "#ffddb8",
+                    "inverse-surface": "#e5e1e4",
+                    "primary": "#ffc174",
+                    "outline": "#a08e7a",
+                    "on-error-container": "#ffdad6",
+                    "error": "#ffb4ab",
+                    "surface-container-highest": "#353437",
+                    "secondary-fixed-dim": "#bac8dc",
+                    "tertiary-fixed-dim": "#bbc6e2",
+                    "tertiary-container": "#a6b1cc",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-surface": "#e5e1e4",
+                    "surface-tint": "#ffb95f",
+                    "on-tertiary-fixed": "#101b30",
+                    "on-tertiary-container": "#39445a",
+                    "surface-variant": "#353437",
+                    "on-secondary": "#243141",
+                    "tertiary-fixed": "#d7e2ff",
+                    "background": "#131315",
+                    "on-secondary-fixed-variant": "#3a4859",
+                    "inverse-primary": "#855300",
+                    "on-surface-variant": "#d8c3ad",
+                    "secondary-container": "#3a4859",
+                    "error-container": "#93000a",
+                    "primary-container": "#f59e0b",
+                    "on-primary-fixed-variant": "#653e00",
+                    "secondary": "#bac8dc",
+                    "on-secondary-fixed": "#0f1c2c",
+                    "tertiary": "#c1cce8",
+                    "on-primary-container": "#613b00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "container-padding-desktop": "40px",
+                    "gutter": "24px",
+                    "stack-md": "24px",
+                    "stack-lg": "48px",
+                    "stack-sm": "12px",
+                    "container-padding-mobile": "20px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Space Grotesk"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-md": ["Space Grotesk"],
+                    "translation-text": ["Inter"],
+                    "display-lg": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "translation-text": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #08080a;
+            color: #e5e1e4;
+        }
+        .glass-panel {
+            background: rgba(13, 27, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.05);
+        }
+        .amber-glow {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .progress-bar-fill {
+            transition: width 1s ease-in-out;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+<div class="flex justify-between items-center px-container-padding-desktop max-w-7xl mx-auto h-20">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center w-10 h-10 rounded bg-primary-container amber-glow transition-transform active:scale-90 cursor-pointer">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">translate</span>
+</div>
+<div class="flex flex-col">
+<span class="font-display-lg text-headline-md tracking-tighter text-primary leading-none">OverTalk</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant tracking-widest uppercase">The Radio Room</span>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-body-md text-body-md text-on-surface-variant font-medium hover:text-primary transition-colors duration-300" href="#">Dashboard</a>
+<a class="font-body-md text-body-md text-primary font-bold border-b-2 border-primary pb-1 transition-colors duration-300" href="#">Minha Conta</a>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg font-bold hover:opacity-90 active:scale-95 transition-all">
+                    Sair
+                </button>
+</div>
+</div>
+</nav>
+<!-- Content Canvas -->
+<main class="pt-32 pb-20 px-container-padding-mobile md:px-container-padding-desktop max-w-7xl mx-auto">
+<!-- Header Section -->
+<header class="mb-stack-lg animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-4xl mx-auto">
+<div class="flex items-center gap-4 mb-2">
+<span class="material-symbols-outlined text-primary text-4xl">account_circle</span>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg">Minha Conta</h1>
+</div>
+<p class="text-on-surface-variant font-body-lg text-body-lg opacity-80">operator_alpha_09@overtalk.ai</p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-stack-md max-w-7xl">
+<!-- Operator Info Card -->
+<section class="md:col-span-7 glass-panel p-stack-md rounded-xl space-y-6">
+<div class="flex justify-between items-start">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">badge</span>
+                        Informações do Operador
+                    </h2>
+<span class="bg-[#2d3a4b] text-secondary-fixed px-3 py-1 rounded-full font-label-caps text-[10px] border border-secondary/20">STATUS: ATIVO</span>
+</div>
+<div class="space-y-4 pt-2">
+<div class="group">
+<label class="font-label-caps text-on-surface-variant block mb-1">E-MAIL PRINCIPAL</label>
+<div class="border-b border-outline-variant/30 py-2 flex items-center gap-3 transition-colors group-hover:border-primary">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">mail</span>
+<span class="font-body-md text-body-md">operator_alpha_09@overtalk.ai</span>
+</div>
+</div>
+<div class="group">
+<label class="font-label-caps text-on-surface-variant block mb-1">MEMBRO DESDE</label>
+<div class="border-b border-outline-variant/30 py-2 flex items-center gap-3 transition-colors group-hover:border-primary">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">calendar_today</span>
+<span class="font-body-md text-body-md">14 de Outubro, 2023</span>
+</div>
+</div>
+<div class="pt-4">
+<label class="font-label-caps text-on-surface-variant block mb-3">TIPO DE CONTA</label>
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 border border-primary/30 px-4 py-2 rounded-lg flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-primary">PLANO PRO</span>
+</div>
+<span class="text-on-surface-variant text-sm italic">Próxima renovação: 14 Nov</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Usage Section -->
+<section class="md:col-span-5 glass-panel p-stack-md rounded-xl space-y-6">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                    Uso do Sistema
+                </h2>
+<div class="space-y-8">
+<!-- Progress Item 1 -->
+<div class="space-y-2">
+<div class="flex justify-between font-label-caps text-[11px]">
+<span class="text-on-surface">MINUTOS DE TRADUÇÃO (MÊS)</span>
+<span class="text-primary">840 / 1000 min</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="progress-bar-fill h-full bg-primary amber-glow" style="width: 84%"></div>
+</div>
+</div>
+<!-- Progress Item 2 -->
+<div class="space-y-2">
+<div class="flex justify-between font-label-caps text-[11px]">
+<span class="text-on-surface">CARACTERES TÉCNICOS</span>
+<span class="text-secondary">42.5k / 100k</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="progress-bar-fill h-full bg-secondary" style="width: 42.5%"></div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant/20">
+<p class="text-xs text-on-surface-variant leading-relaxed">
+<span class="material-symbols-outlined text-[14px] align-middle mr-1">info</span>
+                            Seus limites reiniciam em 12 dias. Usuários Pro possuem prioridade de processamento em canais de alta latência.
+                        </p>
+</div>
+</div>
+</section>
+<!-- Pricing Plans Upgrade Section -->
+<section class="md:col-span-12 py-10">
+<div class="mb-10 text-center">
+<h2 class="font-display-lg text-headline-md text-primary mb-2">Upgrade de Performance</h2>
+<p class="text-on-surface-variant font-body-lg">Escolha o plano ideal para a sua operação</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Plan 1 -->
+<div class="glass-panel p-6 rounded-xl flex flex-col border border-white/5 hover:border-primary/30 transition-all duration-300">
+<div class="mb-6">
+<h3 class="font-label-caps text-on-surface-variant text-[10px] mb-1">OPERADOR</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold text-on-surface">R$</span>
+<span class="text-4xl font-bold text-on-surface">0</span>
+<span class="text-on-surface-variant">/mês</span>
+</div>
+</div>
+<ul class="space-y-3 mb-8 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                60 min de tradução/mês
+                            </li>
+<li class="flex items-start gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                Tradução em tempo real
+                            </li>
+</ul>
+<button class="w-full py-2 border border-outline-variant/50 rounded text-sm font-bold opacity-50 cursor-not-allowed">PLANO ATUAL</button>
+</div>
+<!-- Plan 2 -->
+<div class="glass-panel p-6 rounded-xl flex flex-col border border-white/5 hover:border-primary/30 transition-all duration-300">
+<div class="mb-6">
+<h3 class="font-label-caps text-on-surface-variant text-[10px] mb-1">ESTRATEGISTA</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold text-on-surface">R$</span>
+<span class="text-4xl font-bold text-on-surface">5</span>
+<span class="text-on-surface-variant">/mês</span>
+</div>
+</div>
+<ul class="space-y-3 mb-8 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                500 min de tradução/mês
+                            </li>
+<li class="flex items-start gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                Histórico ilimitado
+                            </li>
+</ul>
+<button class="w-full py-2 bg-surface-container-highest hover:bg-surface-bright rounded text-sm font-bold transition-colors">SELECIONAR</button>
+</div>
+<!-- Plan 3 (PRO - Current Highlight) -->
+<div class="glass-panel p-6 rounded-xl flex flex-col border-2 border-primary amber-glow relative overflow-hidden">
+<div class="absolute -top-1 -right-1">
+<div class="bg-primary text-on-primary text-[8px] font-bold px-4 py-1 rotate-45 translate-x-3 translate-y-2 uppercase">RECOMENDADO</div>
+</div>
+<div class="mb-6">
+<h3 class="font-label-caps text-primary text-[10px] mb-1">COMANDANTE</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold text-on-surface">R$</span>
+<span class="text-4xl font-bold text-on-surface">10</span>
+<span class="text-on-surface-variant">/mês</span>
+</div>
+</div>
+<ul class="space-y-3 mb-8 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                2000 min de tradução/mês
+                            </li>
+<li class="flex items-start gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                Tradução técnica avançada
+                            </li>
+<li class="flex items-start gap-2 text-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                Prioridade de rede
+                            </li>
+</ul>
+<button class="w-full py-2 bg-primary text-on-primary rounded text-sm font-bold hover:scale-[1.02] transition-transform">UPGRADE AGORA</button>
+</div>
+<!-- Plan 4 -->
+<div class="glass-panel p-6 rounded-xl flex flex-col border border-white/5 hover:border-primary/30 transition-all duration-300">
+<div class="mb-6">
+<h3 class="font-label-caps text-on-surface-variant text-[10px] mb-1">ELITE</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold text-on-surface">R$</span>
+<span class="text-4xl font-bold text-on-surface">15</span>
+<span class="text-on-surface-variant">/mês</span>
+</div>
+</div>
+<ul class="space-y-3 mb-8 flex-grow">
+<li class="flex items-start gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                Minutos ilimitados
+                            </li>
+<li class="flex items-start gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                Suporte 24/7 dedicado
+                            </li>
+<li class="flex items-start gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm mt-0.5">check_circle</span>
+                                Criptografia quântica
+                            </li>
+</ul>
+<button class="w-full py-2 bg-surface-container-highest hover:bg-surface-bright rounded text-sm font-bold transition-colors">SELECIONAR</button>
+</div>
+</div>
+</section>
+<!-- Navigation Actions -->
+<div class="md:col-span-12 flex flex-col md:flex-row gap-4 pt-4 max-w-4xl mx-auto w-full">
+<a class="flex-1 flex items-center justify-center gap-2 bg-surface-container-high border border-outline-variant/30 py-4 rounded-xl font-medium hover:bg-surface-bright transition-colors group" href="#">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-[-4px] transition-transform">arrow_back</span>
+                    Voltar ao Dashboard
+                </a>
+<button class="flex-1 flex items-center justify-center gap-2 border border-error/30 py-4 rounded-xl font-medium text-error hover:bg-error/10 transition-colors">
+<span class="material-symbols-outlined">logout</span>
+                    Encerrar Sessão
+                </button>
+</div>
+</div>
+</main>
+<!-- Footer Component -->
+<footer class="w-full py-stack-lg border-t border-outline-variant/30 bg-surface-container-lowest">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-padding-desktop max-w-7xl mx-auto gap-stack-md">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-display-lg text-headline-md text-primary tracking-tighter">OverTalk</span>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 text-center md:text-left">© 2026 OverTalk AI. Tradução de precisão para a elite global.</p>
+</div>
+<div class="flex gap-6 flex-wrap justify-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Política de Privacidade</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Termos de Serviço</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Comunidade Discord</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Suporte</a>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions and Entrance animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const bars = document.querySelectorAll('.progress-bar-fill');
+            bars.forEach(bar => {
+                const finalWidth = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = finalWidth;
+                }, 400);
+            });
+        });
+    </script>
+</body></html>

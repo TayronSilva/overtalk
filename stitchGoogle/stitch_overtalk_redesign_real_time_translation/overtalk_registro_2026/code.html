@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OverTalk - Registro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-highest": "#353437",
+                    "inverse-primary": "#855300",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-background": "#e5e1e4",
+                    "on-error": "#690005",
+                    "surface-container": "#201f22",
+                    "on-primary-fixed-variant": "#653e00",
+                    "inverse-on-surface": "#313032",
+                    "secondary": "#bac8dc",
+                    "on-tertiary-fixed-variant": "#3c475d",
+                    "primary": "#ffc174",
+                    "on-primary-fixed": "#2a1700",
+                    "inverse-surface": "#e5e1e4",
+                    "surface-container-low": "#1c1b1e",
+                    "surface-container-high": "#2a2a2c",
+                    "secondary-fixed": "#d6e4f9",
+                    "error-container": "#93000a",
+                    "background": "#131315",
+                    "tertiary-fixed": "#d7e2ff",
+                    "primary-fixed": "#ffddb8",
+                    "surface-bright": "#39393b",
+                    "surface-dim": "#131315",
+                    "secondary-fixed-dim": "#bac8dc",
+                    "on-primary": "#472a00",
+                    "on-surface-variant": "#d8c3ad",
+                    "on-error-container": "#ffdad6",
+                    "primary-fixed-dim": "#ffb95f",
+                    "outline-variant": "#534434",
+                    "outline": "#a08e7a",
+                    "tertiary-fixed-dim": "#bbc6e2",
+                    "on-tertiary": "#263046",
+                    "tertiary-container": "#a6b1cc",
+                    "on-secondary-container": "#a8b6ca",
+                    "surface-variant": "#353437",
+                    "on-secondary-fixed": "#0f1c2c",
+                    "surface": "#131315",
+                    "secondary-container": "#3a4859",
+                    "on-tertiary-fixed": "#101b30",
+                    "on-primary-container": "#613b00",
+                    "primary-container": "#f59e0b",
+                    "tertiary": "#c1cce8",
+                    "on-surface": "#e5e1e4",
+                    "on-secondary-fixed-variant": "#3a4859",
+                    "surface-tint": "#ffb95f",
+                    "error": "#ffb4ab",
+                    "on-tertiary-container": "#39445a",
+                    "on-secondary": "#243141"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "base": "8px",
+                    "stack-sm": "12px",
+                    "stack-md": "24px",
+                    "container-padding-desktop": "40px",
+                    "container-padding-mobile": "20px",
+                    "stack-lg": "48px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Space Grotesk"],
+                    "translation-text": ["Inter"],
+                    "label-caps": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Space Grotesk"],
+                    "display-lg": ["Space Grotesk"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "translation-text": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #08080a;
+            color: #e5e1e4;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(13, 27, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .amber-glow:focus-within {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+        }
+
+        .primary-gradient {
+            background: linear-gradient(to bottom, #f59e0b, #d97706);
+        }
+
+        .input-cutout {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #1b263b;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-cutout:focus {
+            border-bottom: 1px solid #ffc174;
+            outline: none;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .floating-orb {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, rgba(13, 27, 42, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(60px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md">
+<!-- Ambient Background Elements -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden">
+<div class="floating-orb top-[-10%] left-[-10%]" id="orb1"></div>
+<div class="floating-orb bottom-[-20%] right-[-10%] scale-150" id="orb2"></div>
+</div>
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-container-padding-mobile md:px-container-padding-desktop py-stack-sm top-0 fixed z-50">
+<div class="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-primary">OverTalk</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary-fixed-dim transition-colors p-2">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+</header>
+<!-- Main Registration Section -->
+<main class="flex-grow flex items-center justify-center px-container-padding-mobile py-stack-lg mt-16">
+<div class="w-full max-w-[480px] glass-panel rounded-xl p-stack-md md:p-stack-lg border border-outline-variant/20">
+<!-- Heading Area -->
+<div class="text-center mb-stack-md">
+<h1 class="font-headline-md text-headline-md-mobile md:text-headline-md text-on-surface mb-2">Criar Conta</h1>
+<p class="text-on-surface-variant text-body-md">Inicie sua jornada de comunicação global.</p>
+</div>
+<!-- Social Registration -->
+<button class="w-full flex items-center justify-center gap-3 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 rounded-lg py-3 px-4 transition-all active:scale-[0.98]"><img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTe6uowbH_zryHTSXFWgcxIh0dTcHfBy6QPzRHW87N-DYfHYdM_hP4OtWSAQrIQoNoJ8VSFTU42Qkh2dzuCpIRhOXD-b65WtXxOrVQXq6iXJmZ8VfB6n51l5uRyMyqRvnPMClLHQO8dSFr30hb8iEAJ776aAXFsSTexFKvfceLYEP88VZUm3rMyJ-m9RhQhD2XF5xPM-BIb0UTptZvqKmn4XUWCEGjWR-2gClKq5JkfIdi9sLMG-fXqw"/><span class="font-label-caps text-label-caps text-on-surface">Registrar com Google</span></button>
+<!-- Divider -->
+<div class="flex items-center my-stack-md gap-4">
+<div class="h-[1px] flex-grow bg-outline-variant/30"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">OU</span>
+<div class="h-[1px] flex-grow bg-outline-variant/30"></div>
+</div>
+<!-- Registration Form -->
+<form class="space-y-stack-md" id="registrationForm">
+<!-- Email Field -->
+<div class="group amber-glow">
+<label class="font-label-caps text-label-caps text-on-surface-variant mb-2 block" for="email">E-mail</label>
+<div class="relative">
+<input class="w-full input-cutout py-3 text-on-surface font-body-md placeholder:text-on-surface-variant/30" id="email" placeholder="nome@exemplo.com" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="group amber-glow">
+<label class="font-label-caps text-label-caps text-on-surface-variant mb-2 block" for="password">Senha</label>
+<div class="relative">
+<input class="w-full input-cutout py-3 text-on-surface font-body-md placeholder:text-on-surface-variant/30 pr-10" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-0 bottom-3 text-on-surface-variant hover:text-primary transition-colors" onclick="togglePassword('password', 'toggleIcon1')" type="button">
+<span class="material-symbols-outlined" id="toggleIcon1">visibility</span>
+</button>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full primary-gradient text-on-primary-fixed font-headline-md py-4 rounded-lg shadow-lg shadow-primary-container/10 border border-primary/20 hover:brightness-110 transition-all active:scale-[0.98] mt-stack-md" type="submit">
+                    Registrar
+                </button>
+</form>
+<!-- Secondary Action -->
+<div class="mt-stack-md text-center">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors decoration-primary underline-offset-4 decoration-1" href="#">
+                    Já tenho uma conta
+                </a>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="flex flex-col md:flex-row justify-between items-center w-full px-container-padding-mobile md:px-container-padding-desktop py-stack-md gap-4">
+<div class="font-display-lg text-display-lg text-primary opacity-50 scale-75 origin-left">OverTalk</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant text-center md:text-left">© 2026 OverTalk AI. Precisão Garantida.</div>
+<div class="flex gap-stack-md">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all" href="#">Privacidade</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all" href="#">Segurança</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all" href="#">Termos</a>
+</div>
+</footer>
+<!-- Micro-interactions Script -->
+<script>
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        // Form Submission visual feedback
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            btn.innerHTML = '<span class="flex items-center justify-center gap-2">Processando...</span>';
+            btn.classList.add('opacity-80', 'cursor-wait');
+            
+            setTimeout(() => {
+                btn.innerHTML = 'Registrar';
+                btn.classList.remove('opacity-80', 'cursor-wait');
+            }, 2000);
+        });
+
+        // Floating orb mouse parallax
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.floating-orb');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            orbs.forEach((orb, index) => {
+                const speed = (index + 1) * 20;
+                const x = (window.innerWidth - mouseX * speed) / 100;
+                const y = (window.innerHeight - mouseY * speed) / 100;
+                orb.style.transform = `translateX(${x}px) translateY(${y}px)`;
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OverTalk | A barreira do idioma acabou.</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            background-color: #131315;
+            color: #e5e1e4;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .glass-panel {
+            background: rgba(13, 27, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .amber-glow {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+        }
+
+        .amber-glow-button:hover {
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .waveform-bar {
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { height: 8px; }
+            50% { height: 24px; }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1b263b;
+            border-radius: 10px;
+        }
+
+        /* Scenario Tabs styles */
+        .scenario-content {
+            display: none;
+        }
+        .scenario-content.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-active {
+            color: #ffc174;
+            background: rgba(255, 193, 116, 0.1);
+            border-color: #ffc174;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#0e0e10",
+                        "surface": "#131315",
+                        "inverse-primary": "#855300",
+                        "on-primary-container": "#613b00",
+                        "primary": "#ffc174",
+                        "on-secondary-fixed": "#0f1c2c",
+                        "on-error": "#690005",
+                        "on-tertiary": "#263046",
+                        "on-background": "#e5e1e4",
+                        "surface-bright": "#39393b",
+                        "on-tertiary-fixed-variant": "#3c475d",
+                        "outline-variant": "#534434",
+                        "on-surface-variant": "#d8c3ad",
+                        "surface-dim": "#131315",
+                        "on-secondary": "#243141",
+                        "surface-container": "#201f22",
+                        "tertiary-fixed": "#d7e2ff",
+                        "tertiary-container": "#a6b1cc",
+                        "secondary-fixed-dim": "#bac8dc",
+                        "on-error-container": "#ffdad6",
+                        "secondary-fixed": "#d6e4f9",
+                        "on-secondary-fixed-variant": "#3a4859",
+                        "secondary": "#bac8dc",
+                        "surface-container-highest": "#353437",
+                        "primary-fixed": "#ffddb8",
+                        "background": "#131315",
+                        "on-primary": "#472a00",
+                        "outline": "#a08e7a",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#3a4859",
+                        "inverse-on-surface": "#313032",
+                        "primary-fixed-dim": "#ffb95f",
+                        "surface-tint": "#ffb95f",
+                        "surface-container-low": "#1c1b1e",
+                        "tertiary-fixed-dim": "#bbc6e2",
+                        "on-tertiary-container": "#39445a",
+                        "on-surface": "#e5e1e4",
+                        "on-primary-fixed": "#2a1700",
+                        "primary-container": "#f59e0b",
+                        "tertiary": "#c1cce8",
+                        "surface-variant": "#353437",
+                        "surface-container-high": "#2a2a2c",
+                        "on-primary-fixed-variant": "#653e00",
+                        "on-secondary-container": "#a8b6ca",
+                        "inverse-surface": "#e5e1e4",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed": "#101b30"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "stack-sm": "12px",
+                        "container-padding-desktop": "40px",
+                        "container-padding-mobile": "20px",
+                        "stack-md": "24px",
+                        "gutter": "24px",
+                        "stack-lg": "48px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Space Grotesk"],
+                        "display-lg-mobile": ["Space Grotesk"],
+                        "label-caps": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "translation-text": ["Inter"],
+                        "headline-md": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "translation-text": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body-md text-on-surface selection:bg-primary-container/30" id="top">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+<div class="flex justify-between items-center px-container-padding-mobile sm:px-container-padding-desktop max-w-7xl mx-auto h-20">
+<a class="font-display-lg text-headline-md tracking-tighter text-primary" href="#top">OverTalk</a>
+<nav class="hidden md:flex items-center gap-gutter">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="#recursos">Recursos</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="#integracoes">Integrações</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="precos.html">Preços</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="#duvidas">Dúvidas</a>
+</nav>
+<div class="flex items-center gap-base">
+<button class="bg-primary-container text-on-primary font-bold px-4 sm:px-6 py-2.5 rounded-full scale-95 active:scale-90 transition-all amber-glow-button" onclick="window.location.href='registro.html'">
+                    Começar Agora
+                </button>
+</div>
+</div>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden px-container-padding-mobile sm:px-container-padding-desktop animate-in fade-in slide-in-from-bottom-8 duration-1000" id="recursos">
+<div class="relative z-10 text-center max-w-4xl mx-auto space-y-stack-md">
+<div class="inline-block px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary font-label-caps text-label-caps mb-4">
+                    TRADUÇÃO DE PRECISÃO COM IA
+                </div>
+<h1 class="font-display-lg text-display-lg-mobile sm:text-display-lg text-white leading-tight">
+                    A barreira do <span class="text-primary-container">idioma acabou.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto px-4 sm:px-0">
+                    A OverTalk transforma qualquer áudio de reuniões, jogos ou chamadas em tradução simultânea de alta fidelidade. Liberdade total para se conectar com o mundo, sem atrasos.
+                </p>
+<div class="pt-stack-md flex flex-wrap justify-center gap-4 sm:gap-gutter">
+<a class="w-full sm:w-auto bg-primary-container text-on-primary font-bold text-lg px-10 py-4 rounded-xl shadow-[0_0_30px_rgba(245,158,11,0.3)] hover:scale-105 transition-transform amber-glow-button flex items-center justify-center" href="registro.html">Experimentar Grátis</a>
+<button class="w-full sm:w-auto glass-panel text-white font-bold text-lg px-10 py-4 rounded-xl border border-white/10 hover:bg-white/5 transition-all">
+                        Ver Demo
+                    </button>
+</div>
+</div>
+<!-- Professional App Mockup -->
+<div class="relative mt-stack-lg w-full max-w-5xl group mx-auto px-4 sm:px-0">
+<div class="absolute -inset-4 bg-primary/10 blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+<div class="glass-panel rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex">
+<!-- Sidebar Mockup -->
+<div class="w-20 border-r border-white/5 bg-black/20 flex flex-col items-center py-8 gap-stack-md hidden md:flex">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">dashboard</span>
+</div>
+<div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40">
+<span class="material-symbols-outlined">settings</span>
+</div>
+</div>
+<!-- Main Feed -->
+<div class="flex-1 flex flex-col gap-stack-md relative overflow-hidden p-4 sm:p-8 min-h-[400px]">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-1 bg-secondary-container text-secondary rounded-full font-label-caps text-[10px]">EN</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">arrow_forward</span>
+<span class="px-2 py-1 bg-primary-container/20 text-primary rounded-full font-label-caps text-[10px]">PT</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-end gap-[2px] h-3">
+<div class="waveform-bar w-[2px] bg-primary rounded-full" style="animation-delay: 0.1s"></div>
+<div class="waveform-bar w-[2px] bg-primary rounded-full" style="animation-delay: 0.3s"></div>
+<div class="waveform-bar w-[2px] bg-primary rounded-full" style="animation-delay: 0.2s"></div>
+<div class="waveform-bar w-[2px] bg-primary rounded-full" style="animation-delay: 0.5s"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-label-caps">AO VIVO 00:42</span>
+</div>
+</div>
+<div class="space-y-stack-md custom-scrollbar overflow-y-auto pr-4">
+<!-- Translation Card 1 -->
+<div class="p-4 sm:p-6 rounded-xl bg-white/5 border-l-4 border-primary/50 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-700">
+<p class="text-on-surface-variant/60 text-[10px] sm:text-sm font-label-caps">Alex (Valorant Lobby)</p>
+<p class="text-white/40 text-xs sm:text-sm italic font-body-md">"Hey guys, let's go A site, I'll use my smokes to cover the heaven."</p>
+<p class="text-primary text-lg sm:text-xl font-translation-text">"Ei pessoal, vamos para o bomb A, vou usar minhas fumaças para cobrir o céu."</p>
+</div>
+<!-- Translation Card 2 -->
+<div class="p-4 sm:p-6 rounded-xl bg-white/5 border-l-4 border-primary/50 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+<p class="text-on-surface-variant/60 text-[10px] sm:text-sm font-label-caps">Sarah (Project Lead)</p>
+<p class="text-white/40 text-xs sm:text-sm italic font-body-md">"The integration timeline looks solid for the Q3 release."</p>
+<p class="text-primary text-lg sm:text-xl font-translation-text">"O cronograma de integração parece sólido para o lançamento do terceiro trimestre."</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- A Transformação -->
+<section class="py-stack-lg px-container-padding-mobile sm:px-container-padding-desktop max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000">
+<div class="text-center mb-stack-lg">
+<h2 class="font-display-lg text-headline-md text-white mb-base">A Transformação</h2>
+<p class="text-on-surface-variant max-w-xl mx-auto">Sinta o poder de entender cada palavra, em qualquer plataforma.</p>
+</div>
+<div class="grid md:grid-cols-2 gap-gutter">
+<!-- Before -->
+<div class="glass-panel p-8 rounded-2xl space-y-stack-md border border-red-500/10">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-white/50">O Caos Atual</h3>
+<span class="material-symbols-outlined text-error">close</span>
+</div>
+<div class="aspect-video bg-black/40 rounded-xl flex items-center justify-center p-8">
+<div class="text-center space-y-4">
+<span class="material-symbols-outlined text-4xl text-white/20">question_mark</span>
+<p class="text-white/30 italic">"Wait, what did he just say? Is it my turn? I'm missing the context..."</p>
+<div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+<div class="w-1/3 h-full bg-error/50"></div>
+</div>
+<p class="text-xs text-error/60 font-label-caps">COMUNICAÇÃO FRAGMENTADA</p>
+</div>
+</div>
+<p class="text-on-surface-variant/80">Momentos perdidos, decisões erradas e a sensação de estar sempre um passo atrás devido ao idioma.</p>
+</div>
+<!-- After -->
+<div class="glass-panel p-8 rounded-2xl space-y-stack-md border border-primary/20 relative group overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-primary">A Experiência OverTalk</h3>
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</div>
+<div class="aspect-video bg-black/40 rounded-xl flex items-center justify-center p-8 relative">
+<div class="text-center space-y-4 relative z-10">
+<span class="material-symbols-outlined text-4xl text-primary animate-pulse">language</span>
+<p class="text-white text-lg font-medium">"Entendi perfeitamente. Vamos executar o plano."</p>
+<div class="flex justify-center gap-1 h-3">
+<div class="w-3 h-full bg-primary rounded-full animate-bounce"></div>
+<div class="w-3 h-full bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></div>
+<div class="w-3 h-full bg-primary rounded-full animate-bounce [animation-delay:0.4s]"></div>
+</div>
+<p class="text-xs text-primary font-label-caps tracking-widest">TRADUÇÃO EM TEMPO REAL ATIVA</p>
+</div>
+</div>
+<p class="text-on-surface-variant/80">Confiança total. Você foca no conteúdo, a OverTalk cuida da barreira linguística instantaneamente.</p>
+</div>
+</div>
+</section>
+<!-- Domine qualquer cenário (Tabbed/App-like Section) -->
+<section class="py-stack-lg bg-surface-container-low/50 animate-in fade-in slide-in-from-bottom-8 duration-1000" id="domine-cenarios">
+<div class="max-w-7xl mx-auto px-container-padding-mobile sm:px-container-padding-desktop">
+<div class="mb-stack-lg">
+<h2 class="font-display-lg text-headline-md text-white text-center">Domine qualquer cenário</h2>
+</div>
+<!-- Tab Navigation -->
+<div class="flex overflow-x-auto pb-4 gap-2 no-scrollbar mb-8 sm:mb-12 justify-center">
+<button class="scenario-tab tab-active flex-none px-6 py-3 rounded-full border border-white/10 glass-panel font-medium transition-all flex items-center gap-2" onclick="showScenario('gaming', this)">
+<span class="material-symbols-outlined text-sm">sports_esports</span>
+        Jogos
+    </button>
+<button class="scenario-tab flex-none px-6 py-3 rounded-full border border-white/10 glass-panel text-on-surface-variant font-medium transition-all flex items-center gap-2" onclick="showScenario('executives', this)">
+<span class="material-symbols-outlined text-sm">corporate_fare</span>
+        Executivos
+    </button>
+<button class="scenario-tab flex-none px-6 py-3 rounded-full border border-white/10 glass-panel text-on-surface-variant font-medium transition-all flex items-center gap-2" onclick="showScenario('nomads', this)">
+<span class="material-symbols-outlined text-sm">travel_explore</span>
+        Nômades
+    </button>
+<button class="scenario-tab flex-none px-6 py-3 rounded-full border border-white/10 glass-panel text-on-surface-variant font-medium transition-all flex items-center gap-2" onclick="showScenario('social', this)">
+<span class="material-symbols-outlined text-sm">groups</span>
+        Social
+    </button>
+</div>
+<!-- Scenario Contents -->
+<div class="relative min-h-[300px]">
+<!-- Gaming -->
+<div class="scenario-content active flex-col gap-6 p-8 rounded-3xl glass-panel border border-primary/20 items-center text-center" id="gaming">
+<div class="flex items-start justify-between"><div class="flex flex-col items-center gap-4 w-full">
+<div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">sports_esports</span>
+</div>
+<div class="flex gap-2 justify-center">
+<span class="text-[10px] font-label-caps text-primary border border-primary/30 px-3 py-1 rounded">Discord</span>
+<span class="text-[10px] font-label-caps text-primary border border-primary/30 px-3 py-1 rounded">In-Game Chat</span>
+</div>
+</div></div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-4">Competição Global</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed">Jogue em servidores internacionais sem barreiras. Coordene ataques no Valorant ou estratégias no CS2 com clareza cristalina, independente da língua dos seus aliados. A vitória não depende mais de um dicionário.</p>
+</div>
+
+</div>
+<!-- Executives -->
+<div class="scenario-content flex-col gap-6 p-8 rounded-3xl glass-panel border border-secondary/20 items-center text-center" id="executives">
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-4">Executivos e Diplomacia</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed">Participe de reuniões globais com a confiança de quem entende cada nuance. Tome decisões críticas em tempo real sem depender de intérpretes humanos ou atrasos de tradução textual. Domine o mercado internacional.</p>
+</div>
+</div>
+<!-- Nomads -->
+<div class="scenario-content flex-col gap-6 p-8 rounded-3xl glass-panel border border-tertiary/20 items-center text-center" id="nomads">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined">travel_explore</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-4">Nômades Digitais</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed">Viva onde quiser e trabalhe para o mundo todo. O idioma deixou de ser um fator limitante para a sua carreira. A OverTalk é seu passaporte para oportunidades de trabalho em qualquer continente, de sua casa ou de um café em Bali.</p>
+</div>
+</div>
+<!-- Social -->
+<div class="scenario-content flex-col gap-6 p-8 rounded-3xl glass-panel border border-primary/20 items-center text-center" id="social">
+<div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold text-white mb-4">Conexões sem Fronteiras</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed">Faça amigos em qualquer canto do planeta. Assista lives no Twitch ou participe de comunidades globais no Telegram. Entenda a cultura, as piadas e os sentimentos de quem está do outro lado do mundo em tempo real.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Plataformas -->
+<section class="py-stack-lg border-y border-white/5 bg-surface-container-lowest animate-in fade-in slide-in-from-bottom-8 duration-1000" id="integracoes">
+<div class="max-w-7xl mx-auto px-container-padding-mobile sm:px-container-padding-desktop">
+<p class="text-center text-on-surface-variant font-label-caps mb-stack-md">INTEGRAÇÃO NATIVA COM</p>
+<div class="flex flex-wrap justify-center items-center gap-8 sm:gap-stack-lg opacity-40 grayscale hover:grayscale-0 transition-all">
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-4xl">video_chat</span>
+<span class="text-xs font-label-caps">Zoom</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-4xl">forum</span>
+<span class="text-xs font-label-caps">Discord</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-4xl">groups</span>
+<span class="text-xs font-label-caps">Teams</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-4xl">sports_esports</span>
+<span class="text-xs font-label-caps">In-Game</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-4xl">smart_display</span>
+<span class="text-xs font-label-caps">Twitch</span>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-4xl">call</span>
+<span class="text-xs font-label-caps">Skype</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-24 px-container-padding-mobile sm:px-container-padding-desktop text-center relative overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-1000" id="precos">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+<div class="max-w-2xl mx-auto space-y-stack-md relative z-10">
+<h2 class="font-display-lg text-display-lg-mobile sm:text-display-lg text-white">Pronto para sua liberdade <span class="text-primary-container">global?</span></h2>
+<p class="text-on-surface-variant text-lg px-4">Junte-se à elite que já não conhece barreiras linguísticas. O futuro da comunicação é instantâneo.</p>
+<div class="pt-base">
+<a class="w-full sm:w-auto bg-primary-container text-on-primary font-bold text-xl px-12 py-5 rounded-2xl shadow-[0_0_50px_rgba(245,158,11,0.4)] hover:scale-105 transition-all amber-glow-button flex items-center justify-center" href="registro.html">Solicitar Acesso Beta</a>
+<p class="text-xs text-on-surface-variant/50 mt-stack-sm">Vagas limitadas para a primeira fase.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-lg border-t border-outline-variant/30 bg-surface-container-lowest py-12">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-padding-mobile sm:px-container-padding-desktop max-w-7xl mx-auto gap-stack-md">
+<a class="font-display-lg text-headline-md text-primary" href="#top">OverTalk</a>
+<div class="flex flex-wrap justify-center gap-6 sm:gap-gutter text-on-surface-variant font-body-md text-sm"><div class="flex flex-col items-center gap-4"><div class="flex gap-6 items-center mb-2"><a href="https://www.instagram.com/tayronne.dev?igsh=MWswcGNhbWhlMW4zdw==" target="_blank" class="hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-lg">photo_camera</span><span class="hidden sm:inline">Instagram</span></a><a href="https://www.linkedin.com/in/tayronne-silva/" target="_blank" class="hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-lg">work</span><span class="hidden sm:inline">LinkedIn</span></a><a href="#" class="hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-lg">forum</span><span class="">2ronne</span></a></div><a class="hover:text-primary transition-colors font-medium border-b border-primary/30 pb-0.5" href="mailto:ttayronne.dev@gmail.com">Suporte</a></div></div>
+<div class="text-on-surface-variant font-body-md text-xs text-center md:text-right">© 2026 OverTalk AI. Tradução de precisão para a elite global.</div>
+</div>
+</footer>
+<!-- Beta Modal -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-container-padding-mobile hidden" id="beta-modal">
+<div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="this.parentElement.classList.add('hidden')"></div>
+<div class="glass-panel w-full max-w-lg rounded-2xl p-stack-lg relative z-10 border border-white/20">
+<button class="absolute top-4 right-4 text-white/50 hover:text-white" onclick="document.getElementById('beta-modal').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="text-center space-y-stack-md">
+<div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto">
+<span class="material-symbols-outlined text-4xl">rocket_launch</span>
+</div>
+<h3 class="font-display-lg text-headline-md text-white">Garanta sua vaga</h3>
+<p class="text-on-surface-variant">Nossos servidores estão em fase de escalonamento. Deixe seu e-mail para ser o próximo da fila.</p>
+<form class="space-y-4 pt-4" onsubmit="event.preventDefault(); alert('Inscrito com sucesso!'); document.getElementById('beta-modal').classList.add('hidden')">
+<div class="text-left">
+<label class="text-xs font-label-caps text-on-surface-variant/60 ml-1">SEU MELHOR E-MAIL</label>
+<input class="w-full bg-transparent border-0 border-b-2 border-white/10 text-white py-3 px-1 focus:ring-0 focus:border-primary transition-all placeholder:text-white/20" placeholder="exemplo@voce.com" required="" type="email">
+</div>
+<button class="w-full bg-primary-container text-on-primary font-bold py-4 rounded-xl shadow-lg amber-glow-button transition-all" type="submit">
+                        Entrar na Lista de Espera
+                    </button>
+<p class="text-[10px] text-on-surface-variant/40">Prometemos não enviar spam. Apenas convites de acesso.</p>
+</form>
+</div>
+</div>
+</div>
+<script>
+    // Tab switching logic for scenarios
+    function showScenario(id, el) {
+        // Update Tabs
+        document.querySelectorAll('.scenario-tab').forEach(tab => {
+            tab.classList.remove('tab-active');
+            tab.classList.add('text-on-surface-variant');
+        });
+        el.classList.add('tab-active');
+        el.classList.remove('text-on-surface-variant');
+
+        // Update Content
+        document.querySelectorAll('.scenario-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(id).classList.add('active');
+    }
+
+    // Scroll reveal
+    const observerOptions = { threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in', 'fade-in', 'slide-in-from-bottom-8', 'duration-1000');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+</body></html>

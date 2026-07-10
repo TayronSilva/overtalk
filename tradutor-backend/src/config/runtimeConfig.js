@@ -7,15 +7,15 @@ const __dirname = path.dirname(__filename);
 
 const DEFAULT_CONFIG = {
   rateLimits: {
-    sessionPerMinute: 5,
-    apiPerMinute: 60,
+    sessionPerMinute: 100,
+    apiPerMinute: 1000,
     pinPerMinute: 10,
-    maxSseConnections: 3,
-    maxQueueSize: 5,
-    maxDailySessions: 3,
-    queueTimeoutMs: 30000,
-    maxAudioDurationSeconds: 20,
-    maxPayloadBytes: 20 * 1024 * 1024,
+    maxSseConnections: 50,
+    maxQueueSize: 50,
+    maxDailySessions: 999999,
+    queueTimeoutMs: 60000,
+    maxAudioDurationSeconds: 60,
+    maxPayloadBytes: 50 * 1024 * 1024,
   },
 };
 

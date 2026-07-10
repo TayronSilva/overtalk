@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OverTalk — Painel de Controle</title>
+    <!-- Usando Space Grotesk conforme o Design System para consistência -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#f59e0b',
+                        'primary-dim': '#b45309',
+                        surface: '#131315',
+                        'surface-bright': '#39393b',
+                        outline: 'rgba(255,255,255,0.1)',
+                    },
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0e0e10; color: #f1f5f9; }
+        .glass { background: rgba(19, 19, 21, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .vu-meter { height: 4px; background: #1c1b1e; border-radius: 2px; overflow: hidden; }
+        .vu-fill { height: 100%; transition: width 0.1s ease; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #39393b; border-radius: 10px; }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col">
+    <!-- Mobile Blocker Overlay -->
+    <div id="mobileBlocker" class="fixed inset-0 z-[9999] bg-[#0e0e10] flex flex-col items-center justify-center p-8 text-center md:hidden">
+        <span class="material-symbols-outlined text-primary text-6xl mb-6">desktop_windows</span>
+        <h2 class="text-3xl font-bold mb-4 text-primary">Apenas Desktop</h2>
+        <p class="text-white/60 text-lg max-w-md">O painel de controle do OverTalk requer uma tela maior para funcionar corretamente. Por favor, acesse pelo seu computador.</p>
+        <a href="login.html" class="mt-8 bg-surface-bright/20 border border-outline py-3 px-6 rounded-xl font-medium hover:bg-surface-bright/40 transition-colors text-white">Voltar ao Login</a>
+    </div>
+
+    <!-- Header Unificado -->
+    <header class="h-16 border-b border-outline glass sticky top-0 z-50 px-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-bold text-black text-xl shadow-[0_0_15px_rgba(245,158,11,0.3)]">OT</div>
+            <div>
+                <h1 class="text-sm font-bold tracking-widest text-primary leading-none">OVERTALK</h1>
+                <p class="text-[10px] text-white/40 tracking-[0.2em] font-medium">A SALA DO RÁDIO</p>
+            </div>
+        </div>
+
+        <!-- Status Centralizado -->
+        <div class="hidden md:flex items-center gap-4 bg-black/40 px-4 py-1.5 rounded-full border border-outline">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                <span class="text-xs font-mono">00:42:15</span>
+            </div>
+            <div class="w-px h-3 bg-outline"></div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-white/60">Sistema Ativo</span>
+        </div>
+
+        <!-- Menu de Conta - mais proeminente -->
+        <div class="flex items-center gap-3">
+            <a href="conta.html" class="flex items-center gap-2 px-4 py-2 bg-surface-bright/20 hover:bg-surface-bright/40 border border-outline hover:border-primary/40 rounded-xl transition-all group">
+                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary/30 transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs font-bold leading-tight">Minha Conta</span>
+                    <span class="text-[9px] text-white/40 leading-tight" data-user-email>Plano Grátis</span>
+                </div>
+            </a>
+            <a href="#" class="bg-primary text-black px-4 py-1.5 rounded-lg text-xs font-bold hover:scale-105 active:scale-95 transition-transform" onclick="event.preventDefault(); signOut();">
+                SAIR
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Feed Principal (Reduzindo o destaque do tutorial conforme sugerido) -->
+        <section class="flex-1 flex flex-col border-r border-outline relative">
+            <div class="p-4 border-b border-outline flex items-center justify-between bg-surface/30">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-white/50">Fluxo de Tradução</h2>
+                <div class="flex gap-2">
+                    <select class="bg-black/40 border border-outline text-[11px] px-2 py-1 rounded outline-none focus:border-primary/50">
+                        <option>Português ↔ Inglês</option>
+                        <option>Espanhol ↔ Inglês</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Feed Box -->
+            <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                <!-- Exemplo de Mensagem -->
+                <div class="max-w-2xl space-y-1">
+                    <div class="flex items-center gap-2 text-[10px] font-bold text-primary/60 uppercase tracking-tighter">
+                        <span>Visitante</span>
+                        <span class="text-white/20">•</span>
+                        <span>14:02</span>
+                    </div>
+                    <div class="bg-surface-bright/10 border border-outline p-4 rounded-2xl rounded-tl-none">
+                        <p class="text-sm font-medium leading-relaxed">"Ei pessoal, vamos para o bomb A, vou usar minhas fumaças para cobrir o céu."</p>
+                        <p class="text-xs text-white/40 italic mt-2">"Hey guys, let's go A site, I'll use my smokes to cover the heaven."</p>
+                    </div>
+                </div>
+
+                <div class="max-w-2xl ml-auto space-y-1 text-right">
+                    <div class="flex items-center justify-end gap-2 text-[10px] font-bold text-white/40 uppercase tracking-tighter">
+                        <span>14:02</span>
+                        <span class="text-white/20">•</span>
+                        <span>Você</span>
+                    </div>
+                    <div class="bg-primary/5 border border-primary/20 p-4 rounded-2xl rounded-tr-none">
+                        <p class="text-sm font-medium leading-relaxed">"O cronograma de integração parece sólido para o lançamento do terceiro trimestre."</p>
+                        <p class="text-xs text-white/40 italic mt-2">"The integration timeline looks solid for the Q3 release."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rodapé do Feed com funções importantes -->
+            <div class="p-4 border-t border-outline flex gap-4">
+                <button class="flex-1 bg-surface-bright/10 border border-outline hover:border-primary/50 p-3 rounded-xl flex items-center gap-3 transition-colors text-left" onclick="openModal('exportar-modal')">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold">Exportar Transcrição</p>
+                        <p class="text-[10px] text-white/40">Salvar histórico da sessão atual</p>
+                    </div>
+                </button>
+                <button class="flex-1 bg-surface-bright/10 border border-outline hover:border-primary/50 p-3 rounded-xl flex items-center gap-3 transition-colors text-left" onclick="openModal('guia-modal')">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary text-xs">?</div>
+                    <div>
+                        <p class="text-xs font-bold">Guia Rápido</p>
+                        <p class="text-[10px] text-white/40">Como configurar áudio e microfone</p>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <!-- Sidebar - Funções Reais (Padronizando termos em PT e organizando ordem) -->
+        <aside class="w-80 flex flex-col bg-surface/20">
+            <div class="p-6 space-y-8 overflow-y-auto">
+                
+                <!-- Áudio do Sistema -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-white/40">Áudio do Sistema</h3>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white/5 text-white/40 border border-outline uppercase">Offline</span>
+                    </div>
+                    <div class="vu-meter">
+                        <div class="vu-fill bg-primary w-[30%] shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+                    </div>
+                    <div class="space-y-2">
+                        <select class="w-full bg-black/40 border border-outline p-2.5 rounded-lg text-xs outline-none focus:border-primary/40">
+                            <option>Compartilhar Aba do Navegador</option>
+                            <option>Audio Interno (Loopback)</option>
+                        </select>
+                        <input type="text" placeholder="Apelido do Falante" class="w-full bg-black/40 border border-outline p-2.5 rounded-lg text-xs outline-none focus:border-primary/40 placeholder:text-white/20">
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-outline"></div>
+
+                <!-- Microfone -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-white/40">Microfone</h3>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-bold bg-primary/20 text-primary border border-primary/20 uppercase">Ativo</span>
+                    </div>
+                    <div class="vu-meter">
+                        <div class="vu-fill bg-primary w-[15%]"></div>
+                    </div>
+                    <div class="space-y-3">
+                        <select class="w-full bg-black/40 border border-outline p-2.5 rounded-lg text-xs outline-none focus:border-primary/40">
+                            <option>Microfone Padrão (System)</option>
+                        </select>
+                        <label class="flex items-center gap-3 cursor-pointer group">
+                            <div class="relative">
+                                <input type="checkbox" class="sr-only peer">
+                                <div class="w-8 h-4 bg-white/10 rounded-full peer peer-checked:bg-primary/40 transition-colors"></div>
+                                <div class="absolute left-1 top-1 w-2 h-2 bg-white/40 rounded-full peer-checked:translate-x-4 peer-checked:bg-primary transition-all"></div>
+                            </div>
+                            <span class="text-xs text-white/60 group-hover:text-white transition-colors">Modo PTT (Push-to-Talk)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-outline"></div>
+
+                <!-- Sala Privada (Conexão Mobile) -->
+                <div class="bg-black/40 rounded-2xl border border-outline p-5 text-center space-y-4">
+                    <div>
+                        <h3 class="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Sala Privada</h3>
+                        <p class="text-[9px] text-white/30 uppercase leading-none">Para usar no Celular</p>
+                    </div>
+                    <div class="text-2xl font-mono font-bold tracking-[0.3em] text-primary py-2 bg-black/60 rounded-xl border border-outline">
+                        291847
+                    </div>
+                    <div class="aspect-square bg-white/5 rounded-xl border border-outline flex items-center justify-center overflow-hidden">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                    </div>
+                    <p class="text-[10px] text-white/40 leading-relaxed px-2">Escaneie o QR Code ou acesse pelo navegador do seu smartphone.</p>
+                </div>
+            </div>
+
+            <!-- Status do Sistema no final da Sidebar -->
+            <div class="mt-auto p-4 bg-black/60 border-t border-outline flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                    <span class="text-[9px] font-bold text-white/40 uppercase">Servidor Online</span>
+                </div>
+                <a href="feedback.html" class="text-[9px] font-bold text-primary hover:underline uppercase tracking-wider">Feedback</a>
+            </div>
+        </aside>
+    </main>
+
+
+<!-- Modais -->
+<div id="guia-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('guia-modal')"></div>
+    <div class="relative w-full max-w-lg glass-panel rounded-2xl p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-primary">Guia Rápido</h2>
+            <button class="text-white/40 hover:text-white" onclick="closeModal('guia-modal')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="space-y-5">
+            <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shrink-0">1</div>
+                <div>
+                    <p class="text-sm font-bold text-white">Compartilhe o áudio</p>
+                    <p class="text-xs text-white/50 mt-1">Clique em "INICIAR SISTEMA" no topo e escolha uma aba com áudio (Discord, YouTube, jogo) para compartilhar. O navegador pede permissão.</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shrink-0">2</div>
+                <div>
+                    <p class="text-sm font-bold text-white">Fale no microfone</p>
+                    <p class="text-xs text-white/50 mt-1">Seu microfone é capturado automaticamente. Use o slider de sensibilidade no painel direito para ajustar. Ative o PTT se preferir falar só quando apertar.</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shrink-0">3</div>
+                <div>
+                    <p class="text-sm font-bold text-white">Acompanhe as legendas</p>
+                    <p class="text-xs text-white/50 mt-1">A tradução aparece em tempo real no feed. As bolhas âmbar são sua voz traduzida, as teal são do áudio do sistema. Você também pode escanear o QR Code com o celular.</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shrink-0">4</div>
+                <div>
+                    <p class="text-sm font-bold text-white">Exporte o histórico</p>
+                    <p class="text-xs text-white/50 mt-1">Use o botão "Exportar Transcrição" para baixar um arquivo da conversa. Ideal para revisar reuniões ou calls depois.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="exportar-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('exportar-modal')"></div>
+    <div class="relative w-full max-w-lg glass-panel rounded-2xl p-8 space-y-6">
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-primary">Exportar Transcrição</h2>
+            <button class="text-white/40 hover:text-white" onclick="closeModal('exportar-modal')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <p class="text-sm text-white/60">Baixe o histórico completo da sessão atual em formato de texto. Ideal para:</p>
+        <ul class="space-y-3">
+            <li class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">description</span>
+                <div>
+                    <p class="text-sm font-bold text-white">Reuniões de trabalho</p>
+                    <p class="text-xs text-white/50">Revise decisões e próximos passos com colaboradores internacionais.</p>
+                </div>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">sports_esports</span>
+                <div>
+                    <p class="text-sm font-bold text-white">Estratégias de jogo</p>
+                    <p class="text-xs text-white/50">Salve chamadas táticas em partidas ranqueadas para estudo depois.</p>
+                </div>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-primary text-[18px] mt-0.5">translate</span>
+                <div>
+                    <p class="text-sm font-bold text-white">Prática de idiomas</p>
+                    <p class="text-xs text-white/50">Compare original e tradução lado a lado para aprender vocabulário novo.</p>
+                </div>
+            </li>
+        </ul>
+        <button class="w-full bg-primary text-black font-bold py-3 rounded-lg hover:brightness-110 transition-all active:scale-95 flex items-center justify-center gap-2" onclick="alert('Exportação simulada: arquivo .txt salvo com sucesso!'); closeModal('exportar-modal')">
+            <span class="material-symbols-outlined">download</span>
+            Exportar Conversa
+        </button>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).classList.remove('hidden');
+        document.getElementById(id).classList.add('flex');
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.add('hidden');
+        document.getElementById(id).classList.remove('flex');
+    }
+
+    // Auth guard — redireciona se não logado
+    (async () => {
+        const session = await checkSession();
+        if (!session) {
+            window.location.href = 'landing.html';
+            return;
+        }
+        // Se logado via email, exibe o email do user no header
+        const userEmail = session.user?.email || 'Conectado';
+        const el = document.querySelector('[data-user-email]');
+        if (el) el.textContent = userEmail;
+    })();
+</script>
+</body>
+</html>

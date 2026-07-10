@@ -10,7 +10,8 @@ config(); // Carrega .env ANTES de qualquer process.env
 
 import fs from 'fs';
 import crypto from 'crypto';
-import db, { canStartSession, startSession, getSessionsToday, getUserInfo } from './src/db/database.js';
+import db, { canStartSession, startSession, getSessionsToday, getUserInfo, getUserPlan, checkLimit, upgradeUserTier, createPendingTransaction, getPendingTransaction, updatePendingStatus, PLANS } from './src/db/database.js';
+import { MercadoPagoConfig, PreApproval, Payment } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
 import { conversationManager } from './src/services/ConversationManager.js';
 import { canAccessSession } from './src/services/sessionAccess.js';
@@ -38,7 +39,24 @@ const sessionRateLimiter = createInMemoryRateLimiter({
 });
 const SUPABASE_URL = process.env.SUPABASE_URL || '';
 const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || '';
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
 const supabase = SUPABASE_URL ? createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+// --- MERCADO PAGO SETUP ---
+const MERCADO_PAGO_ACCESS_TOKEN = process.env.MERCADO_PAGO_ACCESS_TOKEN || '';
+const mpClient = MERCADO_PAGO_ACCESS_TOKEN ? new MercadoPagoConfig({ accessToken: MERCADO_PAGO_ACCESS_TOKEN }) : null;
+const mpPreApproval = mpClient ? new PreApproval(mpClient) : null;
+if (!mpClient) {
+    console.warn("⚠️ [MP] Mercado Pago não configurado. Payment routes desabilitadas.");
+}
+
+// Configuração de planos × preços no MP (em centavos)
+const MP_PLAN_PRICES = {
+    profissional: 500,   // R$ 5,00
+    poweruser: 1000,     // R$ 10,00
+    corporate: 1500,     // R$ 15,00
+};
+const supabaseAdmin = SUPABASE_URL && SUPABASE_SERVICE_KEY ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY) : null;
 if (!supabase) {
     console.warn("⚠️ [AUTH] Supabase não configurado no .env. Rodando em modo aberto (sem login exigido).");
 }
@@ -46,11 +64,10 @@ if (!supabase) {
 const requireAuth = async (req, res, next) => {
     if (!supabase && process.env.NODE_ENV === 'development') return next(); // Bypass só em DEV
     
-    const token = req.headers.authorization?.split(' ')[1] || req.query.token;
+    const token = req.headers.authorization?.split(' ')[1];
     if (!token) return res.status(401).json({ error: 'Token JWT ausente.' });
 
     if (!supabase) return res.status(500).json({ error: 'Servidor não configurado para autenticação.' });
-    if (!token) return res.status(401).json({ error: 'Token JWT ausente.' });
     
     const { data: { user }, error } = await supabase.auth.getUser(token);
     if (error || !user) {
@@ -147,7 +164,7 @@ class TranscriptionQueue {
 }
 
 const transcriptionQueue = new TranscriptionQueue({
-    maxConcurrent: 1,
+    maxConcurrent: 2,
     maxQueueDepth: runtimeConfig.rateLimits.maxQueueSize,
     jobTimeoutMs: runtimeConfig.rateLimits.queueTimeoutMs
 });
@@ -169,14 +186,49 @@ env.cacheDir = path.join(process.cwd(), '.cache');
 console.log(`[CONFIG] Limites carregados: fila=${runtimeConfig.rateLimits.maxQueueSize}, timeoutFila=${runtimeConfig.rateLimits.queueTimeoutMs}ms, audioMax=${runtimeConfig.rateLimits.maxAudioDurationSeconds}s`);
 
 const app = express();
-app.use(cors({
-    origin: true,
-    credentials: true,
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-app.options(/(.*)/, cors({ origin: true, credentials: true }));
-app.use(express.raw({ type: 'application/octet-stream', limit: '100mb' }));
+
+// CORS — restrito a origens conhecidas + túnel dinâmico
+const ALLOWED_ORIGINS = [
+    'https://overtalk.vercel.app',
+    'https://overtalk.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+];
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && (ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.lhr.life') || origin.endsWith('.localhost.run'))) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    } else if (!origin) {
+        // Same-origin requests or direct API calls (mobile, extensions)
+        res.setHeader('Access-Control-Allow-Origin', '*');
+    } else {
+        res.setHeader('Access-Control-Allow-Origin', 'https://overtalk.vercel.app');
+    }
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Max-Age', '86400');
+    res.setHeader('Vary', 'Origin');
+
+    // Security headers
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '0');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204, { 'Content-Length': '0' });
+        return res.end();
+    }
+    next();
+});
+app.use(express.raw({ type: 'application/octet-stream', limit: '10mb' }));
+
+// Middleware para validar magic bytes de áudio (PCM Float32)
+function isValidAudioBuffer(buffer) {
+    if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 16) return false;
+    if (buffer.length % 4 !== 0) return false; // Float32 = 4 bytes por sample
+    return true;
+}
 
 // Memória de Vozes (Persistência no Disco)
 const SPEAKERS_FILE = path.join(process.cwd(), 'speakers.json');
@@ -209,38 +261,127 @@ function saveSpeakers(session) {
 // --- SESSION MANAGER E TÚNEL ---
 let currentTunnelUrl = "";
 
-console.log(`\n🔐 ==============================================`);
-console.log(`🔐 Sessões privadas agora são isoladas por usuário/sessão.`);
-console.log(`🔐 ==============================================\n`);
+// --- SSE Token Exchange (evita expor JWT em query string) ---
+const sseTokens = new Map(); // Map<token, { userId, sessionId, expiresAt }>
+
+function generateSseToken(userId) {
+    const token = crypto.randomUUID();
+    sseTokens.set(token, {
+        userId,
+        expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutos
+    });
+    return token;
+}
+
+// Cleanup SSE tokens periódico
+setInterval(() => {
+    const now = Date.now();
+    for (const [token, data] of sseTokens.entries()) {
+        if (now > data.expiresAt) sseTokens.delete(token);
+    }
+}, 60000);
+
+app.post('/api/sse/token', requireAuth, (req, res) => {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Não autorizado.' });
+    const sseToken = generateSseToken(userId);
+    res.json({ token: sseToken, expiresIn: 300 });
+});
+
+// Função para validar token SSE ou JWT
+async function resolveSseUser(token) {
+    // Tenta SSE token primeiro (curta duração, nunca logado)
+    if (token && sseTokens.has(token)) {
+        const data = sseTokens.get(token);
+        if (Date.now() < data.expiresAt) {
+            return { userId: data.userId };
+        }
+        sseTokens.delete(token);
+    }
+    // Fallback: JWT via Supabase
+    if (token && supabase) {
+        const { data: { user } } = await supabase.auth.getUser(token);
+        if (user) return { userId: user.id };
+    }
+    return null;
+}
 
 app.get('/api/pin', (req, res) => {
     res.json({ url: currentTunnelUrl });
 });
 
+// --- SIGNUP PROXY (bypassa rate limit de email do Supabase) ---
+const signupRateLimiter = createInMemoryRateLimiter({
+    limit: 5,
+    windowMs: 60 * 60 * 1000, // 5 tentativas por hora
+    keyPrefix: 'signup'
+});
+const signupRateLimitMiddleware = createRateLimitMiddleware({
+    limiter: signupRateLimiter,
+    keyGenerator: (req) => req.ip || 'unknown',
+    message: 'Limite de cadastros atingido. Tente novamente em 1 hora.',
+    logLabel: 'signup'
+});
+app.post('/api/auth/signup', express.json(), signupRateLimitMiddleware, async (req, res) => {
+    if (!supabaseAdmin) {
+        return res.status(500).json({ error: 'Servidor não configurado para cadastro.' });
+    }
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email e senha são obrigatórios.' });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ error: 'Senha deve ter pelo menos 6 caracteres.' });
+    }
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+    });
+    if (error) {
+        console.error(`❌ [AUTH] Erro Supabase ao criar usuário ${email}:`, error.message);
+        return res.status(400).json({ error: error.message });
+    }
+    console.log(`👤 [AUTH] Novo usuário criado: ${email}`);
+
+    // Salva o usuário no SQLite local imediatamente
+    try {
+        const stmt = db.prepare(`INSERT OR IGNORE INTO users (id, email) VALUES (?, ?)`);
+        stmt.run(data.user.id, email);
+    } catch (e) {
+        console.error(`⚠️ [AUTH] Falha ao salvar usuário no SQLite:`, e.message);
+    }
+
+    res.json({ success: true });
+});
+// -----------------------------------------------------------------
+
+const userKey = (req) => req.user?.id || req.ip || 'unknown';
+
 const apiRateLimitMiddleware = createRateLimitMiddleware({
     limiter: apiRateLimiter,
-    keyGenerator: (req) => req.ip || 'unknown',
+    keyGenerator: userKey,
     message: 'Limite de requisições atingido. Tente novamente em instantes.',
     logLabel: 'api'
 });
 
 const pinRateLimitMiddleware = createRateLimitMiddleware({
     limiter: pinRateLimiter,
-    keyGenerator: (req) => req.ip || 'unknown',
+    keyGenerator: userKey,
     message: 'Limite de PIN atingido. Tente novamente em instantes.',
     logLabel: 'pin'
 });
 
 const sessionRateLimitMiddleware = createRateLimitMiddleware({
     limiter: sessionRateLimiter,
-    keyGenerator: (req) => req.ip || 'unknown',
+    keyGenerator: userKey,
     message: 'Limite de sessões atingido. Tente novamente em instantes.',
     logLabel: 'session'
 });
 
 app.post('/api/pair', express.json(), pinRateLimitMiddleware, async (req, res) => {
     const { pin } = req.body;
-    const authToken = req.headers.authorization?.split(' ')[1] || req.query.token;
+    const authToken = req.headers.authorization?.split(' ')[1];
     let session = conversationManager.getSessionByPin(pin);
 
     if (authToken && supabase) {
@@ -270,16 +411,32 @@ app.post('/api/pair', express.json(), pinRateLimitMiddleware, async (req, res) =
 
 const requireConversationOwnership = async (req, res, next) => {
     const sid = req.query.sessionId || req.body?.sessionId;
-    const token = req.headers.authorization?.split(' ')[1] || req.query.token;
+    const authHeader = req.headers.authorization?.split(' ')[1]; // JWT (desktop)
+    const pairedToken = req.query.token;                          // Paired/mobile/SSE token (temporário)
+    const token = authHeader || pairedToken;
     let session = sid ? conversationManager.getSession(sid) : undefined;
     let authUser = null;
 
-    if (!session && token && supabase) {
-        const { data: { user } } = await supabase.auth.getUser(token);
+    // JWT só é aceito via Authorization header (nunca via query string)
+    if (authHeader && supabase) {
+        const { data: { user } } = await supabase.auth.getUser(authHeader);
         authUser = user;
-        if (user) {
-            session = conversationManager.getUserSession(user.id);
+    } else if (pairedToken && sseTokens.has(pairedToken)) {
+        // SSE tokens: resolve userId sem expor JWT
+        const sseData = sseTokens.get(pairedToken);
+        if (Date.now() < sseData.expiresAt && sseData.userId) {
+            authUser = { id: sseData.userId };
         }
+    }
+
+    // Se não encontrou por sessionId, tenta pela sessão do usuário autenticado
+    if (!session && authUser) {
+        session = conversationManager.getUserSession(authUser.id);
+    }
+
+    // Se ainda não encontrou, tenta buscar pelo token pareado (dispositivo mobile)
+    if (!session && token) {
+        session = conversationManager.getSessionByToken(token);
     }
 
     if (!session) {
@@ -337,25 +494,135 @@ app.get('/api/session/stats', requireConversationOwnership, (req, res) => {
     });
 });
 
-// --- ACCOUNT INFO ---
+// --- ACCOUNT INFO (com planos) ---
 app.get('/api/account', requireAuth, (req, res) => {
-    // Se Supabase não configurado, req.user não existe (modo bypass)
     const userId = req.user?.id;
     const email = req.user?.email || 'dev@local';
     
-    const user = userId ? getUserInfo(userId) : null;
-    const sessionsToday = userId ? getSessionsToday(userId) : 0;
-    const tier = user?.tier || 'free';
-    const limit = (tier === 'free') ? 3 : Infinity;
+    const planData = userId ? getUserPlan(userId) : null;
+    const sessionLimit = planData?.limits?.maxDailySessions || Infinity;
     
     res.json({
         email,
-        tier,
-        sessionsToday,
-        sessionLimit: limit === Infinity ? null : limit,
-        canStart: userId ? canStartSession(userId, tier) : true,
-        memberSince: user?.created_at || null
+        tier: planData?.tier || 'free',
+        plan: planData?.plan || PLANS.free,
+        usage: planData?.usage || { minutesUsed: 0, storageUsed: 0, sessionsToday: 0 },
+        limits: planData?.limits || { minutesPerMonth: 30, storageMB: 10, maxDailySessions: sessionLimit },
+        canStart: userId ? canStartSession(userId, planData?.tier || 'free') : true,
+        memberSince: planData?.memberSince || null
     });
+});
+
+// --- UPGRADE DE PLANO (simulado até integrar Stripe) ---
+app.post('/api/account/upgrade', requireAuth, (req, res) => {
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: 'Usuário não autenticado' });
+    
+    const { tier: newTier } = req.body;
+    if (!newTier || !PLANS[newTier]) {
+        return res.status(400).json({ error: 'Plano inválido', availableTiers: Object.keys(PLANS) });
+    }
+    if (newTier === 'free') {
+        return res.status(400).json({ error: 'Não é possível fazer downgrade para Free' });
+    }
+    
+    try {
+        const updated = upgradeUserTier(userId, newTier);
+        console.log(`💳 [UPGRADE] Usuário ${userId} fez upgrade para ${newTier}`);
+        res.json({ success: true, plan: updated });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// --- MERCADO PAGO: CRIAR ASSINATURA ---
+app.post('/api/payment/create_subscription', requireAuth, express.json(), async (req, res) => {
+    if (!mpPreApproval) {
+        return res.status(503).json({ error: 'Mercado Pago não configurado no servidor.' });
+    }
+    const userId = req.user?.id;
+    const userEmail = req.user?.email;
+    if (!userId) return res.status(401).json({ error: 'Usuário não autenticado' });
+
+    const { tier } = req.body;
+    if (!tier || !MP_PLAN_PRICES[tier]) {
+        return res.status(400).json({ error: 'Plano inválido', availableTiers: Object.keys(MP_PLAN_PRICES) });
+    }
+
+    const price = MP_PLAN_PRICES[tier];
+    const planName = PLANS[tier]?.name || tier;
+
+    try {
+        const externalReference = `${userId}_${tier}_${Date.now()}`;
+        createPendingTransaction(externalReference, userId, tier);
+
+        const preapproval = await mpPreApproval.create({
+            body: {
+                reason: `OverTalk — ${planName}`,
+                external_reference: externalReference,
+                payer_email: userEmail,
+                auto_recurring: {
+                    frequency: 1,
+                    frequency_type: 'months',
+                    transaction_amount: price / 100,
+                    currency_id: 'BRL',
+                },
+                back_url: {
+                    success: `${req.headers.origin || 'https://overtalk.vercel.app'}/pagamento-sucesso.html`,
+                    failure: `${req.headers.origin || 'https://overtalk.vercel.app'}/pagamento-cancelado.html`,
+                    pending: `${req.headers.origin || 'https://overtalk.vercel.app'}/pagamento-cancelado.html`,
+                },
+                status: 'authorized',
+            },
+        });
+
+        console.log(`💳 [MP] Assinatura criada para ${userId} (${tier}): ${preapproval.id}`);
+        res.json({
+            success: true,
+            subscriptionId: preapproval.id,
+            initPoint: preapproval.init_point || preapproval.sandbox_init_point,
+        });
+    } catch (err) {
+        console.error('❌ [MP] Erro ao criar assinatura:', err.message);
+        res.status(500).json({ error: 'Falha ao criar pagamento.', detail: err.message });
+    }
+});
+
+// --- MERCADO PAGO: WEBHOOK ---
+app.post('/api/payment/webhook', express.json(), async (req, res) => {
+    // Responde 200 imediatamente pro MP não ficar reenviando
+    res.status(200).json({ received: true });
+
+    const { action, data, type } = req.body;
+
+    // MP envia tanto 'payment' quanto 'preapproval' events
+    // Só processamos assinaturas
+    if (!data?.id) return;
+
+    console.log(`📬 [MP WEBHOOK] action=${action}, type=${type}, id=${data.id}`);
+
+    try {
+        if (type === 'preapproval' || type === 'subscription_preapproval' || action?.includes('preapproval')) {
+            const subscription = await mpPreApproval.get({ id: data.id });
+            const status = subscription.status;
+
+            console.log(`📬 [MP] Assinatura ${data.id}: status=${status}, external_ref=${subscription.external_reference}`);
+
+            if (status === 'authorized' && subscription.external_reference) {
+                const [userId, tier] = subscription.external_reference.split('_');
+                if (userId && tier && PLANS[tier]) {
+                    upgradeUserTier(userId, tier);
+                    updatePendingStatus(subscription.external_reference, 'approved');
+                    console.log(`✅ [MP] Plano ATIVADO para ${userId}: ${tier}`);
+                }
+            }
+        } else if (type === 'payment' || type === 'subscription_charge') {
+            // Pagamento recorrente avulso (já tem assinatura ativa)
+            console.log(`📬 [MP] Cobrança recebida para assinatura ${data.id}`);
+        }
+    } catch (err) {
+        console.error('❌ [MP] Erro ao processar webhook:', err.message);
+    }
 });
 
 // --- START SESSION (com rate limit) ---
@@ -373,7 +640,7 @@ app.post('/api/session/start', requireAuth, sessionRateLimitMiddleware, apiRateL
         const used = getSessionsToday(userId);
         return res.status(429).json({
             error: 'Limite diário atingido',
-            message: `Plano Free: ${used}/3 sessões usadas hoje. Faça upgrade para Pro para acesso ilimitado.`,
+            message: `Plano Free: ${used}/${runtimeConfig.rateLimits.maxDailySessions} sessões usadas hoje. Faça upgrade para Pro para acesso ilimitado.`,
             upgrade: true
         });
     }
@@ -540,6 +807,8 @@ app.get('/events', requireConversationOwnership, (req, res) => {
     res.setHeader('Expires', '0');
     res.setHeader('X-Accel-Buffering', 'no'); // CRITICO: Força o Cloudflare a nao buffar a stream
     res.setHeader('Connection', 'keep-alive');
+    // Security: não permite iframe
+    res.setHeader('X-Frame-Options', 'DENY');
     res.flushHeaders();
     
     // Envia o histórico imediatamente ao conectar
@@ -596,6 +865,11 @@ app.post('/register_voice', requireConversationOwnership, apiRateLimitMiddleware
             return res.status(413).json({ error: 'Payload excede o tamanho máximo permitido.' });
         }
         
+        // Valida formato do áudio
+        if (!isValidAudioBuffer(req.body)) {
+            return res.status(400).json({ error: 'Formato de áudio inválido. Esperado Float32 PCM.' });
+        }
+        
         // CORREÇÃO CRÍTICA: Converte Buffer do Node para Float32Array de forma segura
         const audioBuffer = Buffer.from(req.body);
         const float32Audio = new Float32Array(audioBuffer.buffer, audioBuffer.byteOffset, audioBuffer.length / 4);
@@ -629,6 +903,11 @@ app.post('/translate', requireConversationOwnership, async (req, res) => {
     if (isPayloadTooLarge(req.body, runtimeConfig.rateLimits.maxPayloadBytes)) {
         console.warn(`[PAYLOAD] Requisição /translate rejeitada por tamanho excessivo. source=${source}, bytes=${req.body?.length || 0}`);
         return res.status(413).json({ error: 'Payload excede o tamanho máximo permitido.' });
+    }
+
+    // Valida formato do áudio
+    if (!isValidAudioBuffer(req.body)) {
+        return res.status(400).json({ error: 'Formato de áudio inválido. Esperado Float32 PCM.' });
     }
 
     // CORREÇÃO CRÍTICA: Converte Buffer do Node para Float32Array de forma segura
@@ -710,14 +989,24 @@ app.post('/translate', requireConversationOwnership, async (req, res) => {
             // 3. Tradução (NMT)
             const targetLang = (source === 'mic') ? 'en' : 'pt';
             let translatedText = '[Erro de Tradução]';
-            try {
-                const textUrlEncoded = encodeURIComponent(originalText);
-                const url = `https://translate.google.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${textUrlEncoded}`;
-                const fetchRes = await fetch(url);
-                const json = await fetchRes.json();
-                translatedText = json[0].map(item => item[0]).join('');
-            } catch (tErr) {
-                console.error('⚠️ Falha na API de Tradução:', tErr.message);
+            for (let attempt = 1; attempt <= 3; attempt++) {
+                try {
+                    const textUrlEncoded = encodeURIComponent(originalText);
+                    const url = `https://translate.google.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${textUrlEncoded}`;
+                    const fetchRes = await fetch(url, { signal: AbortSignal.timeout(10000) });
+                    if (!fetchRes.ok) throw new Error(`HTTP ${fetchRes.status}`);
+                    const json = await fetchRes.json();
+                    translatedText = json[0].map(item => item[0]).join('');
+                    break; // Sucesso → sai do loop
+                } catch (tErr) {
+                    if (attempt < 3) {
+                        const delay = Math.min(1000 * Math.pow(2, attempt - 1), 4000);
+                        console.warn(`⚠️ Falha na Tradução (tentativa ${attempt}/3): ${tErr.message}. Retentando em ${delay}ms...`);
+                        await new Promise(r => setTimeout(r, delay));
+                    } else {
+                        console.error('⚠️ Falha na API de Tradução após 3 tentativas:', tErr.message);
+                    }
+                }
             }
 
             broadcastEvent(session.id, {
@@ -782,8 +1071,12 @@ app.post('/api/feedback', (req, res) => {
 
 // --- VER FEEDBACKS (rota admin simples) ---
 app.get('/api/feedback', (req, res) => {
-    const adminKey = req.query.key;
-    if (adminKey !== (process.env.ADMIN_KEY || 'overtalk-admin')) {
+    const authHeader = req.headers.authorization?.trim();
+    let adminKey = '';
+    if (authHeader?.startsWith('Bearer ')) {
+        adminKey = authHeader.slice(7).trim();
+    }
+    if (!adminKey || adminKey !== (process.env.ADMIN_KEY || 'overtalk-admin')) {
         return res.status(403).json({ error: 'Acesso negado.' });
     }
     const rows = db.prepare(`SELECT * FROM feedback ORDER BY created_at DESC LIMIT 100`).all();
@@ -815,9 +1108,9 @@ app.listen(PORT, () => {
                     console.log(`🌐 LINK PÚBLICO GERADO: ${currentTunnelUrl}/mobile`);
                     console.log(`🌐 ==============================================\n`);
                     
-                    if (supabase) {
+                    if (supabaseAdmin) {
                         try {
-                            const { error } = await supabase.from('config').update({ backend_url: currentTunnelUrl }).eq('id', 1);
+                            const { error } = await supabaseAdmin.from('config').update({ backend_url: currentTunnelUrl }).eq('id', 1);
                             if (!error) console.log(`✅ Supabase atualizado com o novo backend_url!`);
                             else console.error(`❌ Erro ao atualizar Supabase:`, error.message);
                         } catch (e) { console.error(`❌ Erro de conexão ao atualizar Supabase:`, e.message); }

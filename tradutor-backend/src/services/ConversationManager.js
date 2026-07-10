@@ -10,7 +10,7 @@ class ConversationManager {
 
     createSession(forcedId = null, userId = null) {
         const id = forcedId || crypto.randomUUID();
-        const pin = Math.floor(1000 + Math.random() * 9000).toString();
+        const pin = Math.floor(100000 + Math.random() * 900000).toString(); // 6 dígitos
         
         this.conversations.set(id, {
             id,
@@ -74,7 +74,7 @@ class ConversationManager {
     refreshPin(id) {
         const session = this.conversations.get(id);
         if (session) {
-            session.pin = Math.floor(1000 + Math.random() * 9000).toString();
+            session.pin = Math.floor(100000 + Math.random() * 900000).toString(); // 6 dígitos
             session.pinExpiresAt = Date.now() + 120 * 1000;
             session.ownerToken = crypto.randomUUID();
             return session.pin;
@@ -103,8 +103,6 @@ class ConversationManager {
         const now = Date.now();
         let removed = 0;
         for (const [id, session] of this.conversations.entries()) {
-            if (id === 'default-session') continue; // Don't cleanup the default session yet
-            
             const isIdle = (now - session.stats.lastActive) > maxIdleMs;
             const noClients = session.clients.size === 0;
             

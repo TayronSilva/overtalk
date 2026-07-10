@@ -1,0 +1,275 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR" style="width: 1280px; height: 903px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OverTalk | Feedback</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#472a00",
+                    "inverse-primary": "#855300",
+                    "secondary-fixed-dim": "#bac8dc",
+                    "surface-container-low": "#1c1b1e",
+                    "surface-container": "#201f22",
+                    "secondary-fixed": "#d6e4f9",
+                    "secondary-container": "#3a4859",
+                    "on-primary-fixed": "#2a1700",
+                    "error": "#ffb4ab",
+                    "on-error": "#690005",
+                    "on-primary-fixed-variant": "#653e00",
+                    "surface-dim": "#131315",
+                    "surface-bright": "#39393b",
+                    "on-secondary-fixed-variant": "#3a4859",
+                    "inverse-surface": "#e5e1e4",
+                    "tertiary-container": "#a6b1cc",
+                    "surface": "#131315",
+                    "primary-container": "#f59e0b",
+                    "on-surface": "#e5e1e4",
+                    "tertiary-fixed": "#d7e2ff",
+                    "tertiary-fixed-dim": "#bbc6e2",
+                    "on-secondary-fixed": "#0f1c2c",
+                    "on-tertiary-fixed-variant": "#3c475d",
+                    "on-error-container": "#ffdad6",
+                    "error-container": "#93000a",
+                    "on-secondary": "#243141",
+                    "on-tertiary-container": "#39445a",
+                    "on-tertiary": "#263046",
+                    "primary-fixed-dim": "#ffb95f",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-tertiary-fixed": "#101b30",
+                    "inverse-on-surface": "#313032",
+                    "surface-container-highest": "#353437",
+                    "secondary": "#bac8dc",
+                    "surface-variant": "#353437",
+                    "surface-tint": "#ffb95f",
+                    "on-surface-variant": "#d8c3ad",
+                    "surface-container-high": "#2a2a2c",
+                    "tertiary": "#c1cce8",
+                    "on-secondary-container": "#a8b6ca",
+                    "on-primary-container": "#613b00",
+                    "background": "#131315",
+                    "primary": "#ffc174",
+                    "on-background": "#e5e1e4",
+                    "primary-fixed": "#ffddb8",
+                    "outline-variant": "#534434",
+                    "outline": "#a08e7a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "container-padding-mobile": "20px",
+                    "container-padding-desktop": "40px",
+                    "stack-md": "24px",
+                    "stack-lg": "48px",
+                    "stack-sm": "12px",
+                    "gutter": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Space Grotesk"],
+                    "display-lg": ["Space Grotesk"],
+                    "translation-text": ["Inter"],
+                    "headline-md": ["Space Grotesk"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-caps": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "translation-text": ["20px", {"lineHeight": "1.4", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #08080a;
+            color: #e5e1e4;
+        }
+
+        .glass-panel {
+            background: rgba(13, 27, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .amber-glow {
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+        }
+
+        .amber-gradient {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .input-cutout {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #1b263b;
+            transition: all 0.3s ease;
+        }
+
+        .input-cutout:focus {
+            outline: none;
+            border-bottom: 1px solid #ffc174;
+            box-shadow: 0 4px 10px -5px rgba(245, 158, 11, 0.3);
+        }
+
+        .star-rating span {
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
+        }
+
+        .star-rating span:hover {
+            transform: scale(1.2);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .star-active {
+            font-variation-settings: 'FILL' 1 !important;
+            color: #f59e0b;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-outline-variant/20 shadow-sm flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop py-4">
+<div class="font-display-lg text-display-lg-mobile md:text-display-lg font-bold text-primary">OverTalk</div>
+<div class="flex items-center gap-stack-sm">
+<button class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center pt-24 pb-12 px-container-padding-mobile md:px-container-padding-desktop relative">
+<!-- Subtle Animated Background -->
+
+<div class="max-w-[600px] w-full glass-panel rounded-xl p-stack-lg relative z-10">
+<!-- Header Section -->
+<div class="text-center mb-stack-lg">
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">Sua opinião importa</h1>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-80">Sua opinião é anônima e nos ajuda a melhorar o OverTalk.</p>
+</div>
+<!-- Feedback Form -->
+<form class="space-y-stack-md" id="feedbackForm" onsubmit="event.preventDefault(); alert('Feedback enviado com sucesso!');">
+<!-- Star Rating -->
+<div class="flex flex-col items-center gap-base">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-widest">Avaliação</span>
+<div class="flex gap-2 star-rating text-outline" id="starContainer">
+<span class="material-symbols-outlined text-[32px]" data-star="1">star</span>
+<span class="material-symbols-outlined text-[32px]" data-star="2">star</span>
+<span class="material-symbols-outlined text-[32px]" data-star="3">star</span>
+<span class="material-symbols-outlined text-[32px]" data-star="4">star</span>
+<span class="material-symbols-outlined text-[32px]" data-star="5">star</span>
+</div>
+</div>
+<!-- Category Dropdown -->
+<div class="flex flex-col gap-base">
+<label class="font-label-caps text-label-caps text-outline uppercase tracking-widest">Categoria</label>
+<div class="relative group">
+<select class="w-full input-cutout py-3 px-0 appearance-none font-body-md text-on-surface cursor-pointer focus:ring-0">
+<option class="bg-surface-container" disabled="" selected="" value="">Selecione uma opção</option>
+<option class="bg-surface-container" value="ideia">Ideia / Sugestão</option>
+<option class="bg-surface-container" value="bug">Reportar um Bug / Erro</option>
+<option class="bg-surface-container" value="elogio">Elogio</option>
+<option class="bg-surface-container" value="outro">Outro</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 top-3 pointer-events-none text-outline-variant">expand_more</span>
+</div>
+</div>
+<!-- Message Textarea -->
+<div class="flex flex-col gap-base">
+<label class="font-label-caps text-label-caps text-outline uppercase tracking-widest">Mensagem</label>
+<textarea class="w-full input-cutout py-3 px-0 resize-none font-body-md text-on-surface placeholder:text-outline-variant focus:ring-0" placeholder="O que você achou? O que pode melhorar?" rows="4"></textarea>
+</div>
+<!-- Submit Button -->
+<div class="pt-base">
+<button class="w-full amber-gradient hover:brightness-110 active:scale-[0.98] transition-all py-4 px-8 rounded-lg font-headline-md text-[18px] text-on-primary font-bold amber-glow flex items-center justify-center gap-2" type="submit">
+<span class="">Enviar Feedback Anônimo</span>
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+<!-- Brand Assurance -->
+<div class="flex items-center justify-center gap-2 text-outline-variant pt-base">
+
+
+</div>
+</form>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-stack-md border-t border-outline-variant/10 bg-surface-container-lowest flex flex-col md:flex-row justify-between items-center gap-base px-container-padding-mobile md:px-container-padding-desktop">
+<div class="font-display-lg text-display-lg font-bold text-primary">OverTalk</div>
+<div class="flex gap-gutter font-body-md text-body-md">
+<a class="text-on-surface-variant hover:text-primary transition-all cursor-pointer" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-all cursor-pointer" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-all cursor-pointer" href="#">Security</a>
+</div>
+<p class="text-on-surface-variant opacity-60 text-[14px]">© 2024 OverTalk Global. All rights reserved.</p>
+</footer>
+<!-- Micro-interactions Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = document.querySelectorAll('[data-star]');
+            let currentRating = 0;
+
+            stars.forEach(star => {
+                star.addEventListener('mouseenter', () => {
+                    const rating = parseInt(star.getAttribute('data-star'));
+                    highlightStars(rating);
+                });
+
+                star.addEventListener('mouseleave', () => {
+                    highlightStars(currentRating);
+                });
+
+                star.addEventListener('click', () => {
+                    currentRating = parseInt(star.getAttribute('data-star'));
+                    highlightStars(currentRating);
+                    // Pulsating effect on selection
+                    star.style.transform = 'scale(1.4)';
+                    setTimeout(() => star.style.transform = 'scale(1.2)', 150);
+                });
+            });
+
+            function highlightStars(rating) {
+                stars.forEach(star => {
+                    const starVal = parseInt(star.getAttribute('data-star'));
+                    if (starVal <= rating) {
+                        star.classList.add('star-active');
+                        star.classList.remove('text-outline');
+                    } else {
+                        star.classList.remove('star-active');
+                        star.classList.add('text-outline');
+                    }
+                });
+            }
+        });
+    </script>
+
+
+<div id="snapdom-sandbox" data-snapdom-sandbox="true" aria-hidden="true" style="position: absolute; left: -9999px; top: -9999px; width: 0px; height: 0px; overflow: hidden;"></div></body></html>
