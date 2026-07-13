@@ -1,0 +1,4 @@
+[submodule "tradutor-frontend"]
+	path = tradutor-frontend
+	url = https://github.com/TayronSilva/overtalk.git
+	fetchRecurseSubmodules = on-demand
