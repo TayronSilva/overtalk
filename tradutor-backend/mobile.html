@@ -483,6 +483,10 @@
     </div>
 
 <script>
+    const BACKEND_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1') 
+        ? 'http://localhost:7860' 
+        : 'https://tayronne-overtalk-backend.hf.space';
+
     let sessionToken = localStorage.getItem('ovt_token') || null;
 
     const pinScreen    = document.getElementById('pin-screen');
@@ -514,7 +518,7 @@
     function connectSSE() {
         if (!sessionToken) return;
         if (es) es.close();
-        es = new EventSource(`/events?token=${sessionToken}`);
+        es = new EventSource(`${BACKEND_URL}/events?token=${sessionToken}`);
 
         es.onopen = () => {
             statusPill.classList.add('online');
@@ -577,7 +581,7 @@
     setInterval(async () => {
         if (!sessionToken) return;
         try {
-            const res     = await fetch(`/history_sync?token=${sessionToken}`);
+            const res     = await fetch(`${BACKEND_URL}/history_sync?token=${sessionToken}`);
             const history = await res.json();
             history.forEach(m => addBubble(m.source, m.original, m.translated, false, m.speaker, m.id));
         } catch (e) {}
@@ -643,7 +647,7 @@
             let offset = 0;
             for (const buf of audioData) { merged.set(buf, offset); offset += buf.length; }
 
-            fetch(`/translate?source=mic&token=${sessionToken}`, {
+            fetch(`${BACKEND_URL}/translate?source=mic&token=${sessionToken}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/octet-stream' },
                 body: merged.buffer
@@ -678,7 +682,7 @@
         err.innerText = 'Verificando...';
 
         try {
-            const res  = await fetch('/api/pair', {
+            const res  = await fetch(`${BACKEND_URL}/api/pair`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pin })
@@ -711,11 +715,20 @@
         }
     });
 
-    // Auto-connect if token already saved
-    if (sessionToken) {
+    const params = new URLSearchParams(window.location.search);
+    const urlPin = params.get('pin');
+
+    if (urlPin && /^\d{6}$/.test(urlPin)) {
+        sessionToken = null;
+        localStorage.removeItem('ovt_token');
+        document.querySelector('.pin-sub').innerHTML = 'Conectando via <strong>QR Code</strong>...';
+        for (let i = 0; i < 6; i++) digits[i].value = urlPin[i];
+        setTimeout(() => document.getElementById('btnConnect').click(), 300);
+    } else if (sessionToken) {
         pinScreen.classList.add('hidden');
         mainHeader.classList.remove('hidden');
         mainControls.classList.remove('hidden');
+        chat.classList.remove('hidden');
         connectSSE();
     } else {
         chat.classList.add('hidden');
