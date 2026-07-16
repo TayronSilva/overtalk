@@ -350,13 +350,14 @@
 
         .pin-input-wrap {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             justify-content: center;
             margin-bottom: 28px;
+            width: 100%;
         }
 
         .pin-digit {
-            width: 56px; height: 64px;
+            flex: 1; max-width: 48px; height: 64px;
             background: rgba(0,0,0,0.4);
             border: 1px solid var(--border);
             border-radius: 14px;
@@ -364,6 +365,10 @@
             font-family: var(--font-mono);
             font-size: 28px;
             font-weight: 700;
+            text-align: center;
+            outline: none;
+            padding: 0;
+            min-width: 0;
             text-align: center;
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
@@ -415,7 +420,7 @@
         <div class="pin-card">
             <div class="logo-box">OT</div>
             <h2>Over<span>Talk</span></h2>
-            <p class="pin-sub">Digite o <strong>PIN de 4 dígitos</strong> exibido no painel do PC para entrar na sala privada.</p>
+            <p class="pin-sub">Digite o <strong>PIN de 6 dígitos</strong> exibido no painel do PC para entrar na sala privada.</p>
 
             <div class="pin-input-wrap">
                 <input type="number" class="pin-digit" id="d0" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
@@ -494,7 +499,7 @@
         d.addEventListener('input', () => {
             const val = d.value.replace(/[^0-9]/g, '');
             d.value = val.slice(-1);
-            if (val && i < 3) digits[i + 1].focus();
+            if (val && i < 5) digits[i + 1].focus();
         });
         d.addEventListener('keydown', e => {
             if (e.key === 'Backspace' && !d.value && i > 0) digits[i - 1].focus();
