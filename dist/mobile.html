@@ -1,748 +1,812 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OverTalk — Mobile Hub</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg:            #0a0a0c;
-            --amber:         #f59e0b;
-            --amber-glow:    rgba(245, 158, 11, 0.25);
-            --amber-dark:    #b45309;
-            --teal:          #14b8a6;
-            --teal-glow:     rgba(20, 184, 166, 0.25);
-            --danger:        #ef4444;
-            --danger-glow:   rgba(239, 68, 68, 0.3);
-            --glass:         rgba(14, 14, 18, 0.88);
-            --card:          rgba(255, 255, 255, 0.04);
-            --border:        rgba(255, 255, 255, 0.08);
-            --text-main:     #f8fafc;
-            --text-sub:      #94a3b8;
-            --font-sans:     'Inter', sans-serif;
-            --font-display:  'Outfit', sans-serif;
-            --font-mono:     'JetBrains Mono', monospace;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>OverTalk — Mobile</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23f59e0b'/%3E%3Ctext x='50' y='72' font-size='55' font-family='Arial Black' font-weight='900' text-anchor='middle' fill='%23000'%3EOT%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;height:100dvh}
+:root{
+  --bg:#080810;
+  --amber:#f59e0b;
+  --amber2:#b45309;
+  --glow:rgba(245,158,11,.25);
+  --teal:#14b8a6;
+  --tglow:rgba(20,184,166,.2);
+  --red:#ef4444;
+  --rglow:rgba(239,68,68,.25);
+  --glass:rgba(10,10,16,.92);
+  --bord:rgba(255,255,255,.07);
+  --text:#f1f5f9;
+  --sub:#64748b;
+  --sans:'Inter',sans-serif;
+  --disp:'Outfit',sans-serif;
+  --mono:'JetBrains Mono',monospace
+}
+body{
+  font-family:var(--sans);background:var(--bg);color:var(--text);
+  overflow:hidden;
+  background-image:
+    radial-gradient(ellipse at 20% 0%,rgba(245,158,11,.07) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 100%,rgba(20,184,166,.05) 0%,transparent 55%)
+}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ═══════════════════════════════════
+   SCREEN SYSTEM — full-page layers
+═══════════════════════════════════ */
+.screen{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;
+  transition:opacity .35s ease, transform .35s ease;
+}
+.screen.hidden{
+  opacity:0;pointer-events:none;transform:translateY(24px)
+}
 
-        body {
-            font-family: var(--font-sans);
-            background: var(--bg);
-            color: var(--text-main);
-            height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background-image:
-                radial-gradient(circle at 10% 0%, rgba(245, 158, 11, 0.07) 0%, transparent 40%),
-                radial-gradient(circle at 90% 100%, rgba(20, 184, 166, 0.05) 0%, transparent 40%);
-        }
+/* ═══════════════════════════════════
+   PIN SCREEN
+═══════════════════════════════════ */
+#pin-screen{
+  align-items:center;justify-content:center;padding:24px;
+  background:var(--bg)
+}
+.pin-card{
+  width:100%;max-width:360px;
+  background:rgba(14,14,22,.94);
+  border:1px solid var(--bord);
+  border-radius:28px;
+  padding:40px 24px 36px;
+  text-align:center;
+  backdrop-filter:blur(20px);
+  box-shadow:0 32px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05)
+}
+.logo-box{
+  width:58px;height:58px;margin:0 auto 18px;
+  background:linear-gradient(135deg,var(--amber),var(--amber2));
+  border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--disp);font-weight:900;font-size:22px;color:#000;
+  box-shadow:0 0 28px var(--glow)
+}
+.pin-card h2{
+  font-family:var(--disp);font-weight:900;font-size:26px;margin-bottom:6px;
+  letter-spacing:-.5px
+}
+.pin-card h2 span{font-weight:300;color:var(--sub)}
+.pin-sub{
+  font-size:13px;color:var(--sub);line-height:1.55;margin-bottom:32px
+}
+.pin-sub strong{color:var(--amber);font-weight:600}
+.pin-input-wrap{
+  display:flex;gap:6px;justify-content:center;margin-bottom:28px;width:100%
+}
+.pin-digit{
+  flex:1;max-width:48px;height:64px;
+  background:rgba(0,0,0,.45);
+  border:2px solid rgba(245,158,11,.3);
+  border-radius:14px;
+  color:var(--amber);
+  font-family:var(--mono);font-size:28px;font-weight:700;
+  text-align:center;outline:none;padding:0;min-width:0;
+  -webkit-appearance:none;-moz-appearance:textfield;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+  caret-color:var(--amber)
+}
+.pin-digit::-webkit-inner-spin-button,
+.pin-digit::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.pin-digit:focus{
+  border-color:var(--amber);
+  box-shadow:0 0 20px var(--glow),inset 0 0 8px rgba(245,158,11,.08);
+  background:rgba(245,158,11,.08)
+}
+.pin-digit.filled{
+  border-color:rgba(245,158,11,.7);
+  background:rgba(245,158,11,.1)
+}
+.btn-connect{
+  width:100%;padding:18px;border-radius:16px;border:none;
+  background:linear-gradient(135deg,var(--amber),var(--amber2));
+  color:#000;font-family:var(--disp);font-weight:900;font-size:17px;
+  letter-spacing:.3px;cursor:pointer;
+  box-shadow:0 10px 30px var(--glow);
+  transition:transform .15s,opacity .2s,box-shadow .2s;
+  touch-action:manipulation
+}
+.btn-connect:active{transform:scale(.96);box-shadow:0 4px 12px var(--glow)}
+.btn-connect:disabled{opacity:.5;transform:none;box-shadow:none;cursor:default}
+#pinError{
+  margin-top:16px;min-height:20px;
+  font-size:13px;font-weight:600;color:var(--red)
+}
+#pinError.loading{color:var(--amber)}
 
-        /* ─── HEADER ─── */
-        header {
-            background: var(--glass);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            padding: calc(env(safe-area-inset-top) + 14px) 20px 14px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
+/* ═══════════════════════════════════
+   ROOM SCREEN
+═══════════════════════════════════ */
+#room-screen{background:var(--bg)}
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+/* ─── Header ─── */
+.room-header{
+  flex-shrink:0;
+  background:rgba(8,8,16,.95);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--bord);
+  padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;
+  display:flex;align-items:center;justify-content:space-between
+}
+.room-brand{display:flex;align-items:center;gap:10px}
+.room-logo{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--amber),var(--amber2));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--disp);font-weight:900;font-size:15px;color:#000;
+  box-shadow:0 0 14px var(--glow);flex-shrink:0
+}
+.room-title{
+  font-family:var(--disp);font-weight:900;font-size:16px;
+  letter-spacing:-.3px;line-height:1.1
+}
+.room-title span{font-weight:300;color:var(--sub)}
+.room-sub{font-size:10px;font-weight:600;color:var(--amber);
+  letter-spacing:1.2px;text-transform:uppercase;margin-top:1px}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.pill{
+  background:rgba(0,0,0,.4);border:1px solid var(--bord);
+  padding:5px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;letter-spacing:.6px;
+  color:var(--red);display:flex;align-items:center;gap:5px;
+  text-transform:uppercase;white-space:nowrap;transition:all .4s
+}
+.pill.on{color:var(--teal);border-color:rgba(20,184,166,.25);background:rgba(20,184,166,.07)}
+.pill .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;
+  box-shadow:0 0 5px currentColor}
+.pill.on .dot{animation:blink 1.8s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-leave{
+  background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);
+  color:var(--red);font-family:var(--mono);font-size:9px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;
+  padding:5px 11px;border-radius:20px;cursor:pointer;
+  transition:background .2s
+}
+.btn-leave:active{background:rgba(239,68,68,.25)}
 
-        .logo-box {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, var(--amber), var(--amber-dark));
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 17px;
-            color: #000;
-            box-shadow: 0 0 18px var(--amber-glow);
-            flex-shrink: 0;
-        }
+/* ─── Translation Feed ─── */
+.feed{
+  flex:1;overflow-y:auto;
+  padding:16px 14px;
+  display:flex;flex-direction:column;gap:10px;
+  scrollbar-width:none
+}
+.feed::-webkit-scrollbar{display:none}
+.feed-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:12px;color:var(--sub);
+  font-size:13px;text-align:center;padding:40px 24px
+}
+.feed-empty svg{opacity:.25;width:40px;height:40px}
+.bubble{
+  max-width:86%;padding:12px 16px;border-radius:18px;
+  border:1px solid var(--bord);
+  animation:pop .3s cubic-bezier(.18,.89,.32,1.2) both
+}
+@keyframes pop{
+  from{opacity:0;transform:translateY(14px) scale(.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.bubble.me{
+  align-self:flex-end;
+  background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(180,83,9,.1));
+  border-color:rgba(245,158,11,.2);
+  border-bottom-right-radius:4px
+}
+.bubble.native{
+  align-self:flex-start;
+  background:rgba(20,184,166,.06);
+  border-color:rgba(20,184,166,.14);
+  border-bottom-left-radius:4px
+}
+.bubble-label{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.5px;opacity:.55;
+  display:block;margin-bottom:5px
+}
+.bubble.me .bubble-label{color:var(--amber)}
+.bubble.native .bubble-label{color:var(--teal)}
+.bubble-text{
+  font-family:var(--disp);font-size:16px;font-weight:700;
+  display:block;line-height:1.4;margin-bottom:2px
+}
+.bubble-original{
+  font-size:11px;color:var(--sub);font-style:italic;
+  display:block;line-height:1.4
+}
+.bubble.partial{opacity:.6}
 
-        .brand-name {
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 20px;
-            letter-spacing: -0.5px;
-            line-height: 1;
-        }
+/* ─── Reconnect Bar ─── */
+#reconnect-bar{
+  display:none;flex-shrink:0;
+  background:rgba(239,68,68,.08);
+  border-top:1px solid rgba(239,68,68,.15);
+  padding:10px 16px;
+  display:none;align-items:center;justify-content:space-between;gap:10px;
+  font-size:12px;color:var(--sub)
+}
+#reconnect-bar button{
+  background:none;border:1px solid var(--amber);color:var(--amber);
+  font-family:var(--sans);font-size:11px;font-weight:700;
+  padding:4px 14px;border-radius:16px;cursor:pointer;white-space:nowrap
+}
 
-        .brand-name span { font-weight: 300; color: var(--text-sub); }
-        .brand-sub {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--amber);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 2px;
-        }
+/* ─── Controls Bar ─── */
+.controls{
+  flex-shrink:0;
+  background:rgba(8,8,16,.95);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:1px solid var(--bord);
+  padding:18px 20px calc(18px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:center;gap:14px
+}
+.vol-wrap{
+  width:100%;height:4px;border-radius:10px;
+  background:rgba(255,255,255,.05);overflow:hidden;
+  display:none
+}
+.vol-inner{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--amber),var(--teal));
+  transition:width .04s;border-radius:10px
+}
+.mic-row{display:flex;align-items:center;justify-content:center;gap:20px;width:100%}
+.mic-wrap{position:relative;width:72px;height:72px;display:flex;align-items:center;justify-content:center}
+.mic-ring{
+  position:absolute;inset:-4px;border-radius:50%;
+  border:2px solid var(--amber);opacity:0;transition:opacity .3s
+}
+.mic-btn{
+  width:64px;height:64px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--amber),var(--amber2));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 22px var(--glow);cursor:pointer;outline:none;
+  transition:transform .15s,box-shadow .15s;z-index:2;
+  touch-action:none
+}
+.mic-btn svg{width:26px;height:26px;color:#000}
+.mic-btn.active{
+  background:linear-gradient(135deg,var(--red),#b91c1c);
+  box-shadow:0 0 0 6px rgba(239,68,68,.1),0 6px 22px var(--rglow)
+}
+.mic-btn.active + .mic-ring{opacity:1;border-color:var(--red);animation:ring-pulse 1.4s infinite}
+@keyframes ring-pulse{
+  0%{transform:scale(1);opacity:.6}
+  100%{transform:scale(1.7);opacity:0}
+}
+.mic-hint{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--sub);text-transform:uppercase;letter-spacing:2px;
+  text-align:center
+}
+.feed-meta{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:0 4px
+}
+.feed-meta-label{font-size:10px;color:var(--sub);font-weight:500}
+.btn-clear{
+  background:none;border:1px solid var(--bord);color:var(--sub);
+  font-size:10px;font-weight:600;padding:3px 10px;border-radius:12px;cursor:pointer;
+  transition:all .2s
+}
+.btn-clear:active{background:rgba(255,255,255,.06)}
 
-        .status-pill {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--danger);
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            text-transform: uppercase;
-            transition: all 0.4s;
-        }
+/* ─── Error Toast ─── */
+#error-toast{
+  position:fixed;top:80px;left:16px;right:16px;z-index:9999;
+  background:rgba(239,68,68,.95);color:#fff;
+  padding:12px 18px;border-radius:14px;
+  text-align:center;font-size:13px;font-weight:600;display:none;
+  box-shadow:0 8px 28px var(--rglow);animation:pop .3s ease
+}
 
-        .status-pill.online {
-            color: var(--teal);
-            border-color: var(--teal-glow);
-            background: rgba(20, 184, 166, 0.07);
-        }
-
-        .dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-            box-shadow: 0 0 8px currentColor;
-        }
-
-        /* ─── CHAT ─── */
-        #chat {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            scrollbar-width: none;
-        }
-        #chat::-webkit-scrollbar { display: none; }
-
-        .bubble {
-            max-width: 88%;
-            padding: 14px 18px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            animation: bubbleIn 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.2);
-            position: relative;
-        }
-
-        @keyframes bubbleIn {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .bubble.me {
-            align-self: flex-end;
-            background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(180,83,9,0.15));
-            border-color: rgba(245,158,11,0.25);
-            border-bottom-right-radius: 4px;
-        }
-
-        .bubble.native {
-            align-self: flex-start;
-            background: rgba(20,184,166,0.07);
-            border-color: rgba(20,184,166,0.15);
-            border-bottom-left-radius: 4px;
-        }
-
-        .bubble-label {
-            font-family: var(--font-mono);
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.7;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        .bubble.me   .bubble-label { color: var(--amber); }
-        .bubble.native .bubble-label { color: var(--teal); }
-
-        .translation {
-            font-family: var(--font-display);
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--text-main);
-            display: block;
-            line-height: 1.4;
-            margin-bottom: 4px;
-        }
-
-        .original {
-            font-size: 12px;
-            color: var(--text-sub);
-            font-style: italic;
-            display: block;
-            line-height: 1.4;
-        }
-
-        /* ─── CONTROLS ─── */
-        .controls {
-            padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
-            background: var(--glass);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px;
-            flex-shrink: 0;
-        }
-
-        /* Volume Meter */
-        .vol-meter-wrap {
-            width: 160px; height: 6px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-            display: none;
-        }
-
-        .vol-meter-inner {
-            height: 100%; width: 0%;
-            background: linear-gradient(90deg, var(--amber), var(--teal));
-            transition: width 0.05s;
-            box-shadow: 0 0 10px var(--amber);
-        }
-
-        /* Mic button */
-        .mic-wrap {
-            position: relative;
-            width: 88px; height: 88px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .mic-ring {
-            position: absolute;
-            inset: -4px;
-            border-radius: 50%;
-            border: 2px solid var(--amber);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .mic-btn {
-            width: 72px; height: 72px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dark) 100%);
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 28px var(--amber-glow), 0 0 0 0 var(--amber);
-            cursor: pointer;
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-            transition: transform 0.15s, box-shadow 0.15s;
-            z-index: 2;
-        }
-
-        .mic-btn svg { width: 30px; height: 30px; color: #000; }
-
-        .mic-btn.active {
-            background: linear-gradient(135deg, var(--danger), #c0122e);
-            box-shadow: 0 0 0 6px rgba(239,68,68,0.15), 0 8px 28px var(--danger-glow);
-            transform: scale(0.95);
-        }
-
-        .mic-btn.active + .mic-ring {
-            opacity: 1;
-            border-color: var(--danger);
-            animation: ringPulse 1.4s infinite;
-        }
-
-        @keyframes ringPulse {
-            0%   { transform: scale(1); opacity: 0.7; }
-            100% { transform: scale(1.7); opacity: 0; }
-        }
-
-        .mic-hint {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--text-sub);
-            text-transform: uppercase;
-            letter-spacing: 2.5px;
-        }
-
-        /* ─── ERROR ─── */
-        #error-msg {
-            position: fixed; top: 100px; left: 20px; right: 20px; z-index: 1000;
-            background: var(--danger); color: white; padding: 15px; border-radius: 14px;
-            text-align: center; font-size: 13px; font-weight: 600; display: none;
-            box-shadow: 0 10px 30px var(--danger-glow);
-        }
-
-        /* ─── PIN SCREEN ─── */
-        #pin-screen {
-            position: fixed; inset: 0;
-            background: var(--bg);
-            background-image:
-                radial-gradient(circle at 20% 30%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(20, 184, 166, 0.05) 0%, transparent 50%);
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 32px 24px;
-        }
-
-        .pin-card {
-            width: 100%;
-            max-width: 360px;
-            background: rgba(14, 14, 18, 0.9);
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            padding: 40px 32px;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-        }
-
-        .pin-card .logo-box {
-            width: 56px; height: 56px;
-            font-size: 22px;
-            margin: 0 auto 20px;
-        }
-
-        .pin-card h2 {
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 26px;
-            margin-bottom: 6px;
-        }
-
-        .pin-card h2 span { font-weight: 300; color: var(--text-sub); }
-
-        .pin-sub {
-            font-size: 13px;
-            color: var(--text-sub);
-            line-height: 1.5;
-            margin-bottom: 32px;
-        }
-
-        .pin-sub strong { color: var(--amber); }
-
-        .pin-input-wrap {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            margin-bottom: 28px;
-            width: 100%;
-        }
-
-        .pin-digit {
-            flex: 1; max-width: 48px; height: 64px;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            color: var(--amber);
-            font-family: var(--font-mono);
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-            outline: none;
-            padding: 0;
-            min-width: 0;
-            text-align: center;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            -moz-appearance: textfield;
-        }
-
-        .pin-digit::-webkit-outer-spin-button,
-        .pin-digit::-webkit-inner-spin-button { -webkit-appearance: none; }
-
-        .pin-digit:focus {
-            border-color: var(--amber);
-            box-shadow: 0 0 0 3px var(--amber-glow);
-        }
-
-        .btn-connect {
-            width: 100%;
-            background: linear-gradient(135deg, var(--amber), var(--amber-dark));
-            color: #000;
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-            border: none;
-            padding: 18px;
-            border-radius: 14px;
-            cursor: pointer;
-            box-shadow: 0 8px 24px var(--amber-glow);
-            transition: transform 0.15s, opacity 0.15s;
-        }
-
-        .btn-connect:active { transform: scale(0.97); opacity: 0.9; }
-
-        #pinError {
-            margin-top: 16px;
-            color: var(--danger);
-            font-size: 13px;
-            font-weight: 600;
-            min-height: 20px;
-        }
-
-        /* ─── UTILITY ─── */
-        .hidden { display: none !important; }
-    </style>
+.hidden{display:none!important}
+</style>
 </head>
 <body>
 
-    <!-- ─── PIN SCREEN ─── -->
-    <div id="pin-screen">
-        <div class="pin-card">
-            <div class="logo-box">OT</div>
-            <h2>Over<span>Talk</span></h2>
-            <p class="pin-sub">Digite o <strong>PIN de 6 dígitos</strong> exibido no painel do PC para entrar na sala privada.</p>
+<!-- ═══════════════════════════════
+     SCREEN 1 — PIN INPUT
+═══════════════════════════════ -->
+<div id="pin-screen" class="screen">
+  <div class="pin-card">
+    <div class="logo-box">OT</div>
+    <h2>Over<span>Talk</span></h2>
+    <p class="pin-sub">Digite o <strong>PIN de 6 dígitos</strong> exibido no painel do PC para entrar na sala.</p>
 
-            <div class="pin-input-wrap">
-                <input type="number" class="pin-digit" id="d0" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
-                <input type="number" class="pin-digit" id="d1" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
-                <input type="number" class="pin-digit" id="d2" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
-                <input type="number" class="pin-digit" id="d3" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
-                <input type="number" class="pin-digit" id="d4" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
-                <input type="number" class="pin-digit" id="d5" maxlength="1" min="0" max="9" inputmode="numeric" autocomplete="off">
-            </div>
-
-            <button id="btnConnect" class="btn-connect">Entrar na Sala</button>
-            <div id="pinError"></div>
-        </div>
+    <div class="pin-input-wrap">
+      <input type="text" class="pin-digit" id="d0" maxlength="1" inputmode="numeric" autocomplete="off" aria-label="Dígito 1">
+      <input type="text" class="pin-digit" id="d1" maxlength="1" inputmode="numeric" autocomplete="off" aria-label="Dígito 2">
+      <input type="text" class="pin-digit" id="d2" maxlength="1" inputmode="numeric" autocomplete="off" aria-label="Dígito 3">
+      <input type="text" class="pin-digit" id="d3" maxlength="1" inputmode="numeric" autocomplete="off" aria-label="Dígito 4">
+      <input type="text" class="pin-digit" id="d4" maxlength="1" inputmode="numeric" autocomplete="off" aria-label="Dígito 5">
+      <input type="text" class="pin-digit" id="d5" maxlength="1" inputmode="numeric" autocomplete="off" aria-label="Dígito 6">
     </div>
 
-    <!-- ─── MAIN APP ─── -->
-    <header id="main-header" class="hidden">
-        <div class="brand">
-            <div class="logo-box">OT</div>
-            <div>
-                <div class="brand-name">Over<span>Talk</span></div>
-                <div class="brand-sub">Mobile Hub</div>
-            </div>
-        </div>
-        <div id="statusPill" class="status-pill">
-            <span class="dot"></span>
-            <span id="statusText">Offline</span>
-        </div>
-    </header>
+    <button id="btnConnect" class="btn-connect">Entrar na Sala</button>
+    <div id="pinError"></div>
+  </div>
+</div>
 
-    <div id="error-msg">⚠️ Permissão de Microfone Negada.</div>
+<!-- ═══════════════════════════════
+     SCREEN 2 — TRANSLATION ROOM
+═══════════════════════════════ -->
+<div id="room-screen" class="screen hidden">
 
-    <div id="chat">
-        <div class="bubble native" style="opacity: 0.4;">
-            <span class="bubble-label">Sistema</span>
-            <span class="translation">OverTalk inicializado.</span>
-            <span class="original">Sistemas prontos para tradução.</span>
-        </div>
+  <!-- Header -->
+  <header class="room-header">
+    <div class="room-brand">
+      <div class="room-logo">OT</div>
+      <div>
+        <div class="room-title">Over<span>Talk</span></div>
+        <div class="room-sub">Sala Ativa</div>
+      </div>
     </div>
-
-    <div class="controls hidden" id="main-controls">
-        <div class="vol-meter-wrap" id="volWrap">
-            <div class="vol-meter-inner" id="volInner"></div>
-        </div>
-
-        <div class="mic-wrap">
-            <button id="micBtn" class="mic-btn">
-                <!-- Mic SVG icon -->
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                    <line x1="12" y1="19" x2="12" y2="23"/>
-                    <line x1="8" y1="23" x2="16" y2="23"/>
-                </svg>
-            </button>
-            <div class="mic-ring"></div>
-        </div>
-
-        <div id="micStatus" class="mic-hint">Segure para Falar</div>
+    <div class="hdr-right">
+      <div id="statusPill" class="pill">
+        <span class="dot"></span>
+        <span id="statusText">Conectando</span>
+      </div>
+      <button id="btnLeave" class="btn-leave">Sair</button>
     </div>
+  </header>
+
+  <!-- Translation Feed -->
+  <div id="feed" class="feed">
+    <div id="feed-empty" class="feed-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span>Aguardando traduções...<br>Fale no PC ou segure o microfone abaixo.</span>
+    </div>
+  </div>
+
+  <!-- Reconnect Bar -->
+  <div id="reconnect-bar">
+    <span id="reconText">Conexão perdida.</span>
+    <button id="btnRecon">Reconectar</button>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="feed-meta">
+      <span class="feed-meta-label" id="msgCount">0 mensagens</span>
+      <button class="btn-clear" id="btnClear">Limpar</button>
+    </div>
+    <div class="vol-wrap" id="volWrap">
+      <div class="vol-inner" id="volInner"></div>
+    </div>
+    <div class="mic-row">
+      <div class="mic-wrap">
+        <button id="micBtn" class="mic-btn" title="Segure para falar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+        </button>
+        <div class="mic-ring"></div>
+      </div>
+    </div>
+    <div id="micHint" class="mic-hint">Segure para Falar</div>
+  </div>
+
+</div>
+
+<!-- Error Toast -->
+<div id="error-toast"></div>
 
 <script>
-    // --- ERROR LOGGER FOR MOBILE ---
-    window.onerror = function(msg, url, line, col, error) {
-        alert("Erro JS: " + msg + "\nLinha: " + line);
-        return false;
-    };
-    window.addEventListener('unhandledrejection', function(event) {
-        alert("Erro API/Fetch: " + event.reason);
-    });
-    // -------------------------------
-    const BACKEND_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1') 
-        ? 'http://localhost:7860' 
-        : 'https://tayronne-overtalk-backend.hf.space';
+(function () {
 
-    let sessionToken = localStorage.getItem('ovt_token') || null;
+// ── Error Logger ──────────────────────────────────────
+window.onerror = function (msg, url, line) {
+  showToast('Erro JS: ' + msg + ' (L' + line + ')', 6000);
+  return false;
+};
+window.addEventListener('unhandledrejection', function (e) {
+  showToast('Erro: ' + e.reason, 5000);
+});
 
-    const pinScreen    = document.getElementById('pin-screen');
-    const mainHeader   = document.getElementById('main-header');
-    const mainControls = document.getElementById('main-controls');
-    const chat         = document.getElementById('chat');
-    const statusPill   = document.getElementById('statusPill');
-    const statusText   = document.getElementById('statusText');
-    const micBtn       = document.getElementById('micBtn');
+function showToast(msg, dur) {
+  var t = document.getElementById('error-toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function () { t.style.display = 'none'; }, dur || 3000);
+}
 
-    // ─── PIN Digit Navigation ───
-    const digits = [document.getElementById('d0'), document.getElementById('d1'), document.getElementById('d2'), document.getElementById('d3'), document.getElementById('d4'), document.getElementById('d5')];
-    digits.forEach((d, i) => {
-        d.addEventListener('input', () => {
-            const val = d.value.replace(/[^0-9]/g, '');
-            d.value = val.slice(-1);
-            if (val && i < 5) digits[i + 1].focus();
-        });
-        d.addEventListener('keydown', e => {
-            if (e.key === 'Backspace' && !d.value && i > 0) digits[i - 1].focus();
-        });
-    });
+// ── Backend URL ────────────────────────────────────────
+var BACKEND_URL = (
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1'
+) ? 'http://localhost:7860'
+  : 'https://tayronne-overtalk-backend.hf.space';
 
-    function getPIN() { return digits.map(d => d.value).join(''); }
+// ── State ──────────────────────────────────────────────
+var sessionToken = localStorage.getItem('ovt_token') || null;
+var es = null;
+var reconTimer = null;
+var reconAttempts = 0;
+var audioCtx = null, processor = null, stream = null, audioData = [];
+var isRecording = false;
+var msgCount = 0;
 
-    // ─── SSE ───
-    let es = null, reconnectTimeout = null;
+// ── DOM ────────────────────────────────────────────────
+var pinScreen    = document.getElementById('pin-screen');
+var roomScreen   = document.getElementById('room-screen');
+var btnConnect   = document.getElementById('btnConnect');
+var pinError     = document.getElementById('pinError');
+var statusPill   = document.getElementById('statusPill');
+var statusText   = document.getElementById('statusText');
+var feed         = document.getElementById('feed');
+var feedEmpty    = document.getElementById('feed-empty');
+var msgCountEl   = document.getElementById('msgCount');
+var micBtn       = document.getElementById('micBtn');
+var micHint      = document.getElementById('micHint');
+var volWrap      = document.getElementById('volWrap');
+var volInner     = document.getElementById('volInner');
+var btnLeave     = document.getElementById('btnLeave');
+var btnClear     = document.getElementById('btnClear');
+var reconBar     = document.getElementById('reconnect-bar');
+var reconText    = document.getElementById('reconText');
+var btnRecon     = document.getElementById('btnRecon');
+var errorToast   = document.getElementById('error-toast');
+var digits = [];
+for (var i = 0; i < 6; i++) digits.push(document.getElementById('d' + i));
 
-    function connectSSE() {
-        if (!sessionToken) return;
-        if (es) es.close();
-        es = new EventSource(`${BACKEND_URL}/events?token=${sessionToken}`);
-
-        es.onopen = () => {
-            statusPill.classList.add('online');
-            statusText.innerText = 'Online';
-            if (reconnectTimeout) clearTimeout(reconnectTimeout);
-        };
-
-        es.onerror = () => {
-            statusPill.classList.remove('online');
-            statusText.innerText = 'Reconectando...';
-            es.close();
-            reconnectTimeout = setTimeout(connectSSE, 3000);
-        };
-
-        es.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            if (data.type === 'translation') {
-                addBubble(data.source, data.original, data.translated, data.isPartial, data.speaker, data.id);
-            } else if (data.type === 'history') {
-                data.messages.forEach(m => addBubble(m.source, m.original, m.translated, false, m.speaker, m.id));
-            } else if (data.type === 'heartbeat') {
-                const ping = Date.now() - data.time;
-                statusText.innerText = `Online · ${ping}ms`;
-            }
-        };
+// ── PIN digit navigation ───────────────────────────────
+digits.forEach(function (el, idx) {
+  el.addEventListener('input', function () {
+    var v = el.value.replace(/[^0-9]/g, '');
+    el.value = v ? v[v.length - 1] : '';
+    el.classList.toggle('filled', !!el.value);
+    if (el.value && idx < 5) digits[idx + 1].focus();
+    if (el.value && idx === 5) setTimeout(doConnect, 80);
+  });
+  el.addEventListener('keydown', function (e) {
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      if (el.value) { el.value = ''; el.classList.remove('filled'); }
+      else if (idx > 0) digits[idx - 1].focus();
     }
+    if (e.key === 'Enter') { e.preventDefault(); doConnect(); }
+  });
+  el.addEventListener('focus', function () { el.select(); });
+});
 
-    function addBubble(source, original, translated, isPartial, speaker, msgId = null) {
-        if (msgId && document.querySelector(`.bubble[data-id="${msgId}"]`)) return;
+function getPin() {
+  return digits.map(function (d) { return d.value; }).join('');
+}
 
-        const lastBubble = chat.lastElementChild;
-        const isSelf = source === 'mic';
-        const speakerName = speaker || (isSelf ? 'Você' : 'Native');
+function setErr(msg, cls) {
+  pinError.textContent = msg;
+  pinError.className = cls || '';
+}
 
-        if (lastBubble && lastBubble.getAttribute('data-source') === source && lastBubble.getAttribute('data-partial') === 'true') {
-            lastBubble.querySelector('.translation').innerText = translated;
-            lastBubble.querySelector('.original').innerText    = original;
-            lastBubble.setAttribute('data-partial', isPartial ? 'true' : 'false');
-            if (msgId && !isPartial) lastBubble.setAttribute('data-id', msgId);
-            if (!isPartial) lastBubble.style.opacity = '1';
-        } else {
-            const div = document.createElement('div');
-            div.className = `bubble ${isSelf ? 'me' : 'native'}`;
-            div.setAttribute('data-source', source);
-            div.setAttribute('data-partial', isPartial ? 'true' : 'false');
-            if (msgId && !isPartial) div.setAttribute('data-id', msgId);
-            if (isPartial) div.style.opacity = '0.65';
-            div.innerHTML = `
-                <span class="bubble-label">${speakerName.toUpperCase()}</span>
-                <span class="translation">${translated}</span>
-                <span class="original">${original}</span>
-            `;
-            chat.appendChild(div);
-        }
-        chat.scrollTop = chat.scrollHeight;
-        if (!isPartial && navigator.vibrate) navigator.vibrate(50);
-    }
+// ── Connect ────────────────────────────────────────────
+btnConnect.addEventListener('click', doConnect);
 
-    // ─── Short-poll fallback ───
-    setInterval(async () => {
-        if (!sessionToken) return;
-        try {
-            const res     = await fetch(`${BACKEND_URL}/history_sync?token=${sessionToken}`);
-            const history = await res.json();
-            history.forEach(m => addBubble(m.source, m.original, m.translated, false, m.speaker, m.id));
-        } catch (e) {}
-    }, 5000);
+function doConnect() {
+  var pin = getPin();
+  if (pin.length !== 6) { setErr('Digite os 6 dígitos.'); return; }
+  if (btnConnect.disabled) return;
+  btnConnect.disabled = true;
+  setErr('Verificando...', 'loading');
+  callPair(pin);
+}
 
-    // ─── Mic Recording ───
-    let audioCtx = null, processor = null, stream = null, audioData = [];
-
-    async function startRecording() {
-        try {
-            if (!stream) {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true }
-                });
-            }
-            if (!audioCtx || audioCtx.state === 'closed') {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-            }
-            if (audioCtx.state === 'suspended') await audioCtx.resume();
-
-            const src = audioCtx.createMediaStreamSource(stream);
-            processor  = audioCtx.createScriptProcessor(4096, 1, 1);
-            audioData  = [];
-
-            processor.onaudioprocess = (e) => {
-                const inp = e.inputBuffer.getChannelData(0);
-                let sum = 0;
-                for (let i = 0; i < inp.length; i++) sum += inp[i] * inp[i];
-                const rms = Math.sqrt(sum / inp.length);
-                document.getElementById('volInner').style.width = Math.min(100, rms * 1000) + '%';
-
-                const boosted = new Float32Array(inp.length);
-                for (let i = 0; i < inp.length; i++) {
-                    boosted[i] = Math.max(-1, Math.min(1, inp[i] * 4.0));
-                }
-                audioData.push(boosted);
-            };
-
-            src.connect(processor);
-            processor.connect(audioCtx.destination);
-            micBtn.classList.add('active');
-            document.getElementById('volWrap').style.display = 'block';
-            document.getElementById('micStatus').innerText = '● Ouvindo...';
-            if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
-        } catch (err) {
-            console.error(err);
-            document.getElementById('error-msg').style.display = 'block';
-        }
-    }
-
-    async function stopRecording() {
-        if (!processor) return;
-        micBtn.classList.remove('active');
-        document.getElementById('volWrap').style.display = 'none';
-        document.getElementById('micStatus').innerText = '⏳ Enviando...';
-        processor.disconnect();
-        processor.onaudioprocess = null;
-        processor = null;
-
-        const totalLength = audioData.reduce((a, b) => a + b.length, 0);
-        if (totalLength > 4000) {
-            const merged = new Float32Array(totalLength);
-            let offset = 0;
-            for (const buf of audioData) { merged.set(buf, offset); offset += buf.length; }
-
-            fetch(`${BACKEND_URL}/translate?source=mic&token=${sessionToken}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/octet-stream' },
-                body: merged.buffer
-            }).then(r => r.json()).then(json => {
-                document.getElementById('micStatus').innerText = '✓ Enviado';
-                // SSE já exibe a tradução via broadcastEvent — não duplicar aqui
-            }).catch(() => {
-                document.getElementById('micStatus').innerText = '✗ Erro';
-            }).finally(() => {
-                setTimeout(() => { document.getElementById('micStatus').innerText = 'Segure para Falar'; }, 1500);
-            });
-        } else {
-            document.getElementById('micStatus').innerText = 'Segure para Falar';
-        }
-    }
-
-    let isRecording = false;
-    function handleStart(e) { e.preventDefault(); if (isRecording) return; isRecording = true; startRecording(); }
-    function handleStop()   { if (!isRecording) return; isRecording = false; stopRecording(); }
-
-    micBtn.style.touchAction = 'none';
-    micBtn.addEventListener('pointerdown', handleStart);
-    window.addEventListener('pointerup',     handleStop);
-    window.addEventListener('pointercancel', handleStop);
-
-    // ─── PIN Logic ───
-    document.getElementById('btnConnect').addEventListener('click', async () => {
-        const pin = getPIN();
-        const err = document.getElementById('pinError');
-
-        if (pin.length !== 6) { err.innerText = 'Digite todos os 6 dígitos.'; return; }
-        err.innerText = 'Verificando...';
-
-        try {
-            const res  = await fetch(`${BACKEND_URL}/api/pair`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pin })
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                sessionToken = data.token;
-                localStorage.setItem('ovt_token', sessionToken);
-                err.innerText = '';
-                pinScreen.classList.add('hidden');
-                mainHeader.classList.remove('hidden');
-                mainControls.classList.remove('hidden');
-                chat.classList.remove('hidden');
-                connectSSE();
-            } else {
-                err.innerText = 'PIN inválido. Tente novamente.';
-                digits.forEach(d => d.value = '');
-                digits[0].focus();
-            }
-        } catch (e) {
-            err.innerText = 'Servidor inacessível. Verifique o túnel.';
-        }
-    });
-
-    // Allow Enter key to submit
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && !pinScreen.classList.contains('hidden')) {
-            document.getElementById('btnConnect').click();
-        }
-    });
-
-    const params = new URLSearchParams(window.location.search);
-    const urlPin = params.get('pin');
-
-    if (urlPin && /^\d{6}$/.test(urlPin)) {
-        sessionToken = null;
-        localStorage.removeItem('ovt_token');
-        document.querySelector('.pin-sub').innerHTML = 'Conectando via <strong>QR Code</strong>...';
-        for (let i = 0; i < 6; i++) digits[i].value = urlPin[i];
-        setTimeout(() => document.getElementById('btnConnect').click(), 300);
-    } else if (sessionToken) {
-        pinScreen.classList.add('hidden');
-        mainHeader.classList.remove('hidden');
-        mainControls.classList.remove('hidden');
-        chat.classList.remove('hidden');
-        connectSSE();
+function callPair(pin) {
+  fetch(BACKEND_URL + '/api/pair', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pin: pin })
+  })
+  .then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(function (data) {
+    if (data.success) {
+      sessionToken = data.token;
+      localStorage.setItem('ovt_token', sessionToken);
+      enterRoom();
     } else {
-        chat.classList.add('hidden');
-        digits[0].focus();
+      setErr('PIN inválido. Tente novamente.');
+      digits.forEach(function (d) { d.value = ''; d.classList.remove('filled'); });
+      digits[0].focus();
+      btnConnect.disabled = false;
     }
+  })
+  .catch(function (e) {
+    setErr('Servidor inacessível. Verifique se o backend está ativo.');
+    btnConnect.disabled = false;
+  });
+}
+
+// ── Enter Room ─────────────────────────────────────────
+function enterRoom() {
+  setErr('');
+  pinScreen.classList.add('hidden');
+  roomScreen.classList.remove('hidden');
+  connectSSE();
+}
+
+// ── Leave Room ─────────────────────────────────────────
+btnLeave.addEventListener('click', function () {
+  sessionToken = null;
+  localStorage.removeItem('ovt_token');
+  cleanup();
+  msgCount = 0;
+  updateMsgCount();
+  // Clear feed bubbles
+  var bubbles = feed.querySelectorAll('.bubble');
+  bubbles.forEach(function (b) { b.remove(); });
+  feedEmpty.classList.remove('hidden');
+  // Reset status
+  statusPill.classList.remove('on');
+  statusText.textContent = 'Offline';
+  reconBar.style.display = 'none';
+  // Flip screens
+  roomScreen.classList.add('hidden');
+  pinScreen.classList.remove('hidden');
+  // Reset PIN
+  digits.forEach(function (d) { d.value = ''; d.classList.remove('filled'); });
+  btnConnect.disabled = false;
+  setErr('');
+  digits[0].focus();
+});
+
+// ── Clear Feed ─────────────────────────────────────────
+btnClear.addEventListener('click', function () {
+  var bubbles = feed.querySelectorAll('.bubble');
+  bubbles.forEach(function (b) { b.remove(); });
+  msgCount = 0;
+  updateMsgCount();
+  feedEmpty.classList.remove('hidden');
+});
+
+function updateMsgCount() {
+  msgCountEl.textContent = msgCount === 0 ? '0 mensagens' : msgCount + ' mensagem' + (msgCount > 1 ? 's' : '');
+}
+
+// ── Reconnect Bar ──────────────────────────────────────
+btnRecon.addEventListener('click', function () {
+  reconBar.style.display = 'none';
+  reconAttempts = 0;
+  connectSSE();
+});
+
+// ── SSE ────────────────────────────────────────────────
+function connectSSE() {
+  if (!sessionToken) return;
+  if (es) { es.close(); es = null; }
+  es = new EventSource(BACKEND_URL + '/events?token=' + sessionToken);
+
+  es.onopen = function () {
+    statusPill.classList.add('on');
+    statusText.textContent = 'Online';
+    reconBar.style.display = 'none';
+    reconAttempts = 0;
+    if (reconTimer) { clearTimeout(reconTimer); reconTimer = null; }
+  };
+
+  es.onerror = function () {
+    statusPill.classList.remove('on');
+    statusText.textContent = 'Reconectando...';
+    es.close(); es = null;
+    reconAttempts++;
+    if (reconAttempts > 3) {
+      reconText.textContent = 'Conexão perdida.';
+      reconBar.style.display = 'flex';
+    }
+    reconTimer = setTimeout(connectSSE, Math.min(3000 * reconAttempts, 15000));
+  };
+
+  es.onmessage = function (e) {
+    try {
+      var data = JSON.parse(e.data);
+      if (data.type === 'translation') {
+        addBubble(data.source, data.original, data.translated, data.isPartial, data.speaker, data.id);
+      } else if (data.type === 'history') {
+        data.messages.forEach(function (m) {
+          addBubble(m.source, m.original, m.translated, false, m.speaker, m.id);
+        });
+      } else if (data.type === 'heartbeat') {
+        var ping = Date.now() - data.time;
+        statusText.textContent = 'Online · ' + ping + 'ms';
+      }
+    } catch (err) {}
+  };
+}
+
+// ── Feed Bubbles ───────────────────────────────────────
+function addBubble(source, original, translated, isPartial, speaker, msgId) {
+  if (msgId && feed.querySelector('.bubble[data-id="' + msgId + '"]')) return;
+
+  feedEmpty.classList.add('hidden');
+
+  var isMe = source === 'mic';
+  var name = speaker || (isMe ? 'Você' : 'Nativo');
+
+  var last = feed.querySelector('.bubble:last-child');
+  if (last &&
+      last.getAttribute('data-source') === source &&
+      last.getAttribute('data-partial') === 'true') {
+    last.querySelector('.bubble-text').textContent = translated;
+    last.querySelector('.bubble-original').textContent = original;
+    last.setAttribute('data-partial', isPartial ? 'true' : 'false');
+    if (msgId && !isPartial) last.setAttribute('data-id', msgId);
+    if (!isPartial) last.classList.remove('partial');
+  } else {
+    var div = document.createElement('div');
+    div.className = 'bubble ' + (isMe ? 'me' : 'native') + (isPartial ? ' partial' : '');
+    div.setAttribute('data-source', source);
+    div.setAttribute('data-partial', isPartial ? 'true' : 'false');
+    if (msgId && !isPartial) div.setAttribute('data-id', msgId);
+    div.innerHTML =
+      '<span class="bubble-label">' + name.toUpperCase() + '</span>' +
+      '<span class="bubble-text">' + escHtml(translated) + '</span>' +
+      '<span class="bubble-original">' + escHtml(original) + '</span>';
+    feed.appendChild(div);
+    if (!isPartial) {
+      msgCount++;
+      updateMsgCount();
+      if (navigator.vibrate) navigator.vibrate(30);
+    }
+  }
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── Poll fallback ──────────────────────────────────────
+setInterval(function () {
+  if (!sessionToken || !roomScreen.offsetParent) return;
+  fetch(BACKEND_URL + '/history_sync?token=' + sessionToken)
+    .then(function (r) { if (!r.ok) return null; return r.json(); })
+    .then(function (h) {
+      if (h) h.forEach(function (m) {
+        addBubble(m.source, m.original, m.translated, false, m.speaker, m.id);
+      });
+    }).catch(function () {});
+}, 5000);
+
+// ── Mic Recording ─────────────────────────────────────
+function startRecording() {
+  var p;
+  if (!stream) {
+    p = navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true }
+    });
+  } else { p = Promise.resolve(stream); }
+
+  p.then(function (s) {
+    stream = s;
+    if (!audioCtx || audioCtx.state === 'closed') {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+    }
+    if (audioCtx.state === 'suspended') return audioCtx.resume().then(function () { return s; });
+    return s;
+  }).then(function () {
+    var src = audioCtx.createMediaStreamSource(stream);
+    processor = audioCtx.createScriptProcessor(4096, 1, 1);
+    audioData = [];
+    processor.onaudioprocess = function (e) {
+      var inp = e.inputBuffer.getChannelData(0);
+      var sum = 0;
+      for (var j = 0; j < inp.length; j++) sum += inp[j] * inp[j];
+      var rms = Math.sqrt(sum / inp.length);
+      volInner.style.width = Math.min(100, rms * 1000) + '%';
+      var b = new Float32Array(inp.length);
+      for (var j = 0; j < inp.length; j++) b[j] = Math.max(-1, Math.min(1, inp[j] * 4));
+      audioData.push(b);
+    };
+    src.connect(processor);
+    processor.connect(audioCtx.destination);
+    micBtn.classList.add('active');
+    volWrap.style.display = 'block';
+    micHint.textContent = '● Ouvindo...';
+    if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
+  }).catch(function (err) {
+    showToast('⚠️ Microfone negado. Verifique as permissões.');
+  });
+}
+
+function stopRecording() {
+  if (!processor) return;
+  micBtn.classList.remove('active');
+  volWrap.style.display = 'none';
+  micHint.textContent = '⏳ Enviando...';
+  processor.disconnect();
+  processor.onaudioprocess = null;
+  processor = null;
+
+  var total = audioData.reduce(function (a, b) { return a + b.length; }, 0);
+  if (total > 4000) {
+    var merged = new Float32Array(total);
+    var off = 0;
+    audioData.forEach(function (b) { merged.set(b, off); off += b.length; });
+
+    fetch(BACKEND_URL + '/translate?source=mic&token=' + sessionToken, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/octet-stream' },
+      body: merged.buffer
+    }).then(function () {
+      micHint.textContent = '✓ Enviado';
+    }).catch(function () {
+      micHint.textContent = '✗ Erro ao enviar';
+    }).then(function () {
+      setTimeout(function () { micHint.textContent = 'Segure para Falar'; }, 1600);
+    });
+  } else {
+    micHint.textContent = 'Segure para Falar';
+  }
+  audioData = [];
+}
+
+function handleStart(e) {
+  e.preventDefault();
+  if (isRecording) return;
+  isRecording = true;
+  startRecording();
+}
+function handleStop() {
+  if (!isRecording) return;
+  isRecording = false;
+  stopRecording();
+}
+micBtn.style.touchAction = 'none';
+micBtn.addEventListener('pointerdown', handleStart);
+window.addEventListener('pointerup', handleStop);
+window.addEventListener('pointercancel', handleStop);
+
+// ── Cleanup ────────────────────────────────────────────
+function cleanup() {
+  if (es) { es.close(); es = null; }
+  if (reconTimer) { clearTimeout(reconTimer); reconTimer = null; }
+  if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
+  if (audioCtx && audioCtx.state !== 'closed') audioCtx.close().catch(function () {});
+  processor = null; audioData = []; isRecording = false;
+}
+
+// ── Init ───────────────────────────────────────────────
+var params = new URLSearchParams(window.location.search);
+var urlPin = params.get('pin');
+
+if (urlPin && /^\d{6}$/.test(urlPin)) {
+  // QR Code auto-login
+  sessionToken = null;
+  localStorage.removeItem('ovt_token');
+  document.querySelector('.pin-sub').innerHTML = 'Conectando via <strong>QR Code</strong>...';
+  for (var i = 0; i < 6; i++) { digits[i].value = urlPin[i]; digits[i].classList.add('filled'); }
+  btnConnect.disabled = true;
+  setErr('Conectando...', 'loading');
+  setTimeout(function () { callPair(urlPin); }, 400);
+} else if (sessionToken) {
+  enterRoom();
+} else {
+  setTimeout(function () { digits[0].focus(); }, 300);
+}
+
+})();
 </script>
 </body>
 </html>
