@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OverTalk — Minha Conta</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f59e0b'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial,sans-serif' font-weight='900' font-size='16' fill='%23000'%3EOT%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #131315;
+      --surface: rgba(13,27,42,0.6);
+      --surface-2: rgba(20,20,28,0.7);
+      --border: rgba(255,255,255,0.07);
+      --border-hi: rgba(255,255,255,0.13);
+      --amber: #f59e0b;
+      --amber-dim: #b45309;
+      --amber-glow: rgba(245,158,11,0.22);
+      --teal: #14b8a6;
+      --danger: #ffb4ab;
+      --success: #10b981;
+      --text-main: #e5e1e4;
+      --text-sub: #a08e7a;
+      --text-on-surface-variant: #d8c3ad;
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-display: 'Space Grotesk', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse at 10% 0%, rgba(245,158,11,0.06) 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 100%, rgba(20,184,166,0.05) 0%, transparent 45%);
+    }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+      background: rgba(13,27,42,0.6);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+    .header-brand { display: flex; align-items: center; gap: 14px; }
+    .logo-box {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--amber), var(--amber-dim));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-weight: 900; font-size: 18px; color: #000;
+      box-shadow: 0 0 16px var(--amber-glow);
+    }
+    .brand-name { font-family: var(--font-display); font-weight: 900; font-size: 20px; letter-spacing: 1px; color: #fff; }
+    .brand-sub { font-size: 9px; color: var(--amber); letter-spacing: 2.5px; font-weight: 700; font-family: var(--font-mono); }
+    .header-nav { display: flex; gap: 12px; align-items: center; }
+    .nav-link {
+      color: var(--text-sub); text-decoration: none; font-size: 13px;
+      padding: 6px 14px; border-radius: 8px; transition: all 0.2s;
+    }
+    .nav-link:hover { background: var(--surface-2); color: var(--text-main); }
+    .btn-back {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-sub); padding: 6px 14px; border-radius: 8px;
+      font-size: 12px; font-weight: 700; letter-spacing: 1px; cursor: pointer;
+      font-family: var(--font-sans); transition: all 0.2s; text-decoration: none;
+    }
+    .btn-back:hover { border-color: var(--amber); color: var(--amber); }
+    .btn-logout {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-sub); padding: 6px 14px; border-radius: 8px;
+      font-size: 11px; font-weight: 700; font-family: var(--font-mono); letter-spacing: 1px; cursor: pointer;
+      font-family: var(--font-sans); transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+    .page-content { max-width: 700px; margin: 60px auto; padding: 0 20px; }
+    .page-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+    .page-sub { color: var(--text-sub); font-size: 14px; margin-bottom: 40px; }
+
+    .card {
+      background: rgba(13,27,42,0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-left: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 500; letter-spacing: 2px;
+      color: var(--text-sub); text-transform: uppercase; margin-bottom: 20px;
+      font-family: var(--font-mono);
+    }
+    .info-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .info-label { font-size: 13px; color: var(--text-sub); }
+    .info-value { font-size: 14px; font-weight: 600; font-family: var(--font-mono); }
+
+    .tier-badge {
+      padding: 4px 14px; border-radius: 20px; font-size: 11px;
+      font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .tier-free { background: rgba(100,116,139,0.15); border: 1px solid rgba(100,116,139,0.3); color: var(--text-sub); }
+    .tier-free::before { content: "● "; }
+    .tier-profissional { background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; }
+    .tier-profissional::before { content: "● "; }
+    .tier-poweruser { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: var(--amber); }
+    .tier-poweruser::before { content: "● "; }
+    .tier-corporate { background: rgba(20,184,166,0.15); border: 1px solid rgba(20,184,166,0.3); color: var(--teal); }
+    .tier-corporate::before { content: "● "; }
+
+    .usage-bar-wrap { margin-top: 10px; }
+    .usage-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-sub); margin-bottom: 8px; }
+    .usage-bar-bg { height: 6px; background: rgba(255,255,255,0.06); border-radius: 10px; overflow: hidden; }
+    .usage-bar-fill {
+      height: 100%; border-radius: 10px;
+      background: linear-gradient(90deg, var(--amber), var(--amber-dim));
+      transition: width 0.5s ease;
+    }
+    .usage-bar-fill.danger { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+
+    .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+    .plan-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 20px; text-align: center;
+      transition: all 0.3s; cursor: pointer; text-decoration: none; display: block; color: inherit;
+    }
+    .plan-card:hover { border-color: var(--amber); transform: translateY(-2px); }
+    .plan-card.current { border-color: var(--amber); box-shadow: 0 0 16px var(--amber-glow); }
+    .plan-card .pname { font-size: 11px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--amber); margin-bottom: 4px; }
+    .plan-card .pprice { font-family: var(--font-display); font-size: 24px; font-weight: 900; }
+    .plan-card .pprice small { font-size: 12px; color: var(--text-sub); font-family: var(--font-sans); }
+    .plan-card .pdesc { font-size: 11px; color: var(--text-sub); margin: 6px 0 12px; }
+    .plan-card .pbtn {
+      font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 8px;
+      display: inline-block; border: 1px solid var(--border); transition: all 0.2s;
+    }
+    .plan-card.current .pbtn { background: var(--amber); color: #000; border: none; }
+    .plan-card:not(.current) .pbtn:hover { border-color: var(--amber); color: var(--amber); }
+    .opacity-60 { opacity: 0.6; }
+
+    .loading { color: var(--text-sub); font-size: 14px; text-align: center; padding: 40px; }
+  </style>
+  <script type="module" crossorigin src="/assets/account-2i3xLyjj.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/dist-DzQ6C2DZ.js">
+</head>
+<body>
+  <header>
+    <div class="header-brand">
+      <div class="logo-box">OT</div>
+      <div>
+        <div class="brand-name">OVERTALK</div>
+        <div class="brand-sub">THE RADIO ROOM</div>
+      </div>
+    </div>
+    <div class="header-nav">
+      <a href="/index.html" class="btn-back">← Dashboard</a>
+      <button id="btnLogout" class="btn-logout">SAIR</button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div class="page-title">Minha Conta</div>
+    <div class="page-sub" id="accountEmail">Carregando...</div>
+
+    <div id="loadingState" class="loading">Carregando dados da conta...</div>
+    <div id="accountContent" style="display:none">
+
+      <!-- Info da conta -->
+      <div class="card">
+        <div class="card-title">Informações do Operador</div>
+        <div class="info-row">
+          <span class="info-label">E-mail</span>
+          <span class="info-value" id="infoEmail">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Plano</span>
+          <span class="tier-badge" id="infoTier">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Membro desde</span>
+          <span class="info-value" id="infoSince">—</span>
+        </div>
+      </div>
+
+      <!-- Uso -->
+      <div class="card" id="usageCard">
+        <div class="card-title">Uso do Sistema</div>
+        <div id="minutesUsage" class="usage-bar-wrap">
+          <div class="usage-label">
+            <span>MINUTOS DE TRADUÇÃO (MÊS)</span>
+            <span id="minutesText">—</span>
+          </div>
+          <div class="usage-bar-bg"><div class="usage-bar-fill" id="minutesBar" style="width:0%"></div></div>
+        </div>
+        <div style="margin-top:16px;" id="storageUsage" class="usage-bar-wrap">
+          <div class="usage-label">
+            <span>ARMAZENAMENTO (EXPORTAÇÕES)</span>
+            <span id="storageText">—</span>
+          </div>
+          <div class="usage-bar-bg"><div class="usage-bar-fill" id="storageBar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- Planos -->
+      <div class="card">
+        <div class="card-title">Mudar de Plano</div>
+        <div class="plan-grid" id="planGrid"></div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

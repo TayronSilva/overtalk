@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overtalk — Admin | Feedbacks</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f59e0b'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial,sans-serif' font-weight='900' font-size='16' fill='%23000'%3EOT%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #131315;
+      --surface: rgba(13,27,42,0.6);
+      --surface2: #201f22;
+      --border: rgba(255,255,255,0.07);
+      --text: #e5e1e4;
+      --text-sub: #a08e7a;
+      --text-muted: #8a7a65;
+      --amber: #f59e0b;
+      --amber-dim: rgba(245,158,11,0.15);
+      --green: #22c55e;
+      --green-dim: rgba(34,197,94,0.15);
+      --red: #ffb4ab;
+      --red-dim: rgba(239,68,68,0.15);
+      --blue: #3b82f6;
+      --blue-dim: rgba(59,130,246,0.15);
+      --font-sans: 'Inter', sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse at 10% 0%, rgba(245,158,11,0.06) 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 100%, rgba(20,184,166,0.05) 0%, transparent 45%);
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: rgba(13,27,42,0.6);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-ot {
+      background: linear-gradient(135deg, var(--amber), #b45309);
+      color: #000;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px var(--amber-dim);
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+
+    .brand-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .admin-badge {
+      background: var(--amber-dim);
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    /* ── MAIN ── */
+    .main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* ── LOGIN ── */
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      max-width: 420px;
+      margin: 80px auto;
+      text-align: center;
+    }
+
+    .login-card h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .login-card p {
+      color: var(--text-sub);
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .input-key {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-key:focus { border-color: var(--amber); }
+
+    .btn-enter {
+      background: var(--amber);
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-enter:hover { opacity: 0.85; }
+
+    /* ── DASHBOARD ── */
+    .dashboard { display: none; }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .page-sub {
+      color: var(--text-sub);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stat-value.gold { color: var(--amber); }
+    .stat-value.green { color: var(--green); }
+    .stat-value.red { color: var(--red); }
+
+    /* ── RATING BAR ── */
+    .rating-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+
+    .rating-rows { display: flex; flex-direction: column; gap: 10px; }
+
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .rating-star { color: var(--amber); min-width: 40px; }
+
+    .rating-bar-bg {
+      flex: 1;
+      height: 8px;
+      background: var(--surface2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .rating-bar-fill {
+      height: 100%;
+      background: var(--amber);
+      border-radius: 4px;
+      transition: width 0.6s ease;
+    }
+
+    .rating-count { color: var(--text-sub); min-width: 24px; text-align: right; }
+
+    /* ── FILTERS ── */
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12px;
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-sans);
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--amber);
+      color: var(--amber);
+      background: var(--amber-dim);
+    }
+
+    /* ── FEEDBACK LIST ── */
+    .feed-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .feed-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      transition: border-color 0.2s;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feed-card:hover { border-color: rgba(255,255,255,0.15); }
+
+    .feed-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .feed-stars { color: var(--amber); font-size: 16px; letter-spacing: 2px; }
+
+    .feed-meta { display: flex; align-items: center; gap: 10px; }
+
+    .feed-category {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cat-bug { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+    .cat-sugestao { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+    .cat-elogio { background: var(--green-dim); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .cat-outro { background: var(--surface2); color: var(--text-sub); border: 1px solid var(--border); }
+
+    .feed-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .feed-message {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .feed-message:empty::before {
+      content: '(sem mensagem)';
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--text-muted);
+    }
+
+    .empty-state p { margin-top: 8px; font-size: 14px; }
+
+    .refresh-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--text-sub);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.15s;
+    }
+    .refresh-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+    .top-actions { display: flex; align-items: flex-start; justify-content: space-between; }
+
+    .error-toast {
+      background: var(--red-dim);
+      border: 1px solid rgba(239,68,68,0.4);
+      color: var(--red);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="brand-ot">OT</div>
+    <div>
+      <div class="brand-name">OVERTALK</div>
+      <div class="brand-sub">The Radio Room</div>
+    </div>
+  </div>
+  <span class="admin-badge">⚙ Admin</span>
+</header>
+
+<div class="main">
+
+  <!-- LOGIN -->
+  <div class="login-card" id="loginView">
+    <div style="font-size: 36px; margin-bottom: 16px;">🔐</div>
+    <h2>Painel de Admin</h2>
+    <p>Insira a chave de acesso para visualizar os feedbacks.</p>
+    <div class="input-row">
+      <input type="password" class="input-key" id="adminKeyInput" placeholder="admin-key..." />
+      <button class="btn-enter" onclick="loadFeedbacks()">Entrar</button>
+    </div>
+    <p id="loginError" style="color: var(--red); margin-top: 12px; font-size: 12px; display:none;">Chave inválida.</p>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboardView">
+
+    <div class="top-actions">
+      <div>
+        <h1 class="page-title">💬 Feedbacks</h1>
+        <p class="page-sub">Opiniões coletadas dos usuários do Overtalk.</p>
+      </div>
+      <button class="refresh-btn" onclick="loadFeedbacks(true)">↻ Atualizar</button>
+    </div>
+
+    <div class="error-toast" id="errorToast"></div>
+
+    <!-- STATS -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-card">
+        <div class="stat-label">Total</div>
+        <div class="stat-value gold" id="statTotal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Nota Média</div>
+        <div class="stat-value gold" id="statAvg">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Positivos (4–5 ⭐)</div>
+        <div class="stat-value green" id="statPos">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Negativos (1–2 ⭐)</div>
+        <div class="stat-value red" id="statNeg">—</div>
+      </div>
+    </div>
+
+    <!-- RATING DISTRIBUTION -->
+    <div class="rating-section">
+      <div class="section-title">Distribuição de Notas</div>
+      <div class="rating-rows" id="ratingDist"></div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all" onclick="applyFilter('all', this)">Todos</button>
+      <button class="filter-btn" data-filter="bug" onclick="applyFilter('bug', this)">🐛 Bug</button>
+      <button class="filter-btn" data-filter="sugestao" onclick="applyFilter('sugestao', this)">💡 Sugestão</button>
+      <button class="filter-btn" data-filter="elogio" onclick="applyFilter('elogio', this)">👏 Elogio</button>
+      <button class="filter-btn" data-filter="outro" onclick="applyFilter('outro', this)">📝 Outro</button>
+    </div>
+
+    <!-- LIST -->
+    <div class="feed-list" id="feedList"></div>
+
+  </div>
+</div>
+
+<script>
+  let allFeedbacks = [];
+  let adminKey = '';
+  let backendUrl = '';
+  let currentFilter = 'all';
+
+  // Sanitização para prevenir XSS
+  function escapeHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  // Pega o backend URL do Supabase (mesmo sistema do main.js)
+  const SUPABASE_URL = 'https://nzcciwoxtnfeixphsmro.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_Ze6xS2HlVCV-05-rieBHUA_hOe9t3nZ';
+
+  async function getBackendUrl() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/config?id=eq.1&select=backend_url`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      });
+      const data = await res.json();
+      return data?.[0]?.backend_url || 'http://localhost:3000';
+    } catch { return 'http://localhost:3000'; }
+  }
+
+  async function loadFeedbacks(silent = false) {
+    if (!silent) {
+      adminKey = document.getElementById('adminKeyInput').value.trim();
+    }
+    if (!adminKey) return;
+
+    if (!backendUrl) backendUrl = await getBackendUrl();
+
+    try {
+      const res = await fetch(`${backendUrl}/api/feedback`, {
+        headers: { 'Authorization': `Bearer ${adminKey}` }
+      });
+      if (res.status === 403) {
+        document.getElementById('loginError').style.display = 'block';
+        return;
+      }
+
+      const data = await res.json();
+      allFeedbacks = data;
+
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'block';
+      document.getElementById('errorToast').style.display = 'none';
+
+      renderStats(data);
+      renderRatingDist(data);
+      renderFeedbacks(data, currentFilter);
+
+    } catch (e) {
+      if (document.getElementById('dashboardView').style.display === 'block') {
+        const toast = document.getElementById('errorToast');
+        toast.textContent = '⚠️ Erro ao conectar ao backend: ' + e.message;
+        toast.style.display = 'block';
+      } else {
+        document.getElementById('loginError').textContent = 'Não foi possível conectar ao backend.';
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+  }
+
+  function renderStats(data) {
+    document.getElementById('statTotal').textContent = data.length;
+    if (!data.length) {
+      document.getElementById('statAvg').textContent = '—';
+      document.getElementById('statPos').textContent = '0';
+      document.getElementById('statNeg').textContent = '0';
+      return;
+    }
+    const avg = (data.reduce((s, f) => s + f.rating, 0) / data.length).toFixed(1);
+    const pos = data.filter(f => f.rating >= 4).length;
+    const neg = data.filter(f => f.rating <= 2).length;
+    document.getElementById('statAvg').textContent = avg + ' ⭐';
+    document.getElementById('statPos').textContent = pos;
+    document.getElementById('statNeg').textContent = neg;
+  }
+
+  function renderRatingDist(data) {
+    const el = document.getElementById('ratingDist');
+    el.innerHTML = '';
+    const max = data.length || 1;
+    for (let star = 5; star >= 1; star--) {
+      const count = data.filter(f => f.rating === star).length;
+      const pct = max > 0 ? (count / max * 100) : 0;
+      const stars = '★'.repeat(star) + '☆'.repeat(5 - star);
+      el.innerHTML += `
+        <div class="rating-row">
+          <span class="rating-star">${stars}</span>
+          <div class="rating-bar-bg"><div class="rating-bar-fill" style="width:${pct}%"></div></div>
+          <span class="rating-count">${count}</span>
+        </div>`;
+    }
+  }
+
+  function renderFeedbacks(data, filter) {
+    const el = document.getElementById('feedList');
+    const filtered = filter === 'all' ? data : data.filter(f => f.category === filter);
+
+    if (!filtered.length) {
+      el.innerHTML = `<div class="empty-state"><div style="font-size:40px">🦗</div><p>Nenhum feedback encontrado.</p></div>`;
+      return;
+    }
+
+    el.innerHTML = filtered.map(f => {
+      const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
+      const catClass = 'cat-' + (f.category || 'outro');
+      const catLabel = {bug:'🐛 Bug', sugestao:'💡 Sugestão', elogio:'👏 Elogio', outro:'📝 Outro'}[f.category] || '📝 Outro';
+      const date = new Date(f.created_at).toLocaleString('pt-BR');
+      const safeMsg = escapeHtml(f.message || '');
+      return `
+        <div class="feed-card">
+          <div class="feed-card-top">
+            <span class="feed-stars">${stars}</span>
+            <div class="feed-meta">
+              <span class="feed-category ${catClass}">${catLabel}</span>
+              <span class="feed-date">${escapeHtml(date)}</span>
+            </div>
+          </div>
+          <div class="feed-message">${safeMsg}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function applyFilter(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderFeedbacks(allFeedbacks, filter);
+  }
+
+  // Permite pressionar Enter no campo de senha
+  document.getElementById('adminKeyInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') loadFeedbacks();
+  });
+</script>
+
+</body>
+</html>

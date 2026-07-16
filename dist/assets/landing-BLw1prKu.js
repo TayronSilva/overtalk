@@ -1,0 +1,1 @@
+import{t as e}from"./dist-DzQ6C2DZ.js";/* empty css                 */var{data:{session:t}}=await e(`https://nzcciwoxtnfeixphsmro.supabase.co`,`sb_publishable_Ze6xS2HlVCV-05-rieBHUA_hOe9t3nZ`).auth.getSession();t&&(window.location.href=`/index.html`);

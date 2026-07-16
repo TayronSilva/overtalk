@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OverTalk — The Radio Room</title>
+  <meta name="description" content="OverTalk — Tradução em tempo real, sala privada, identificação de voz." />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f59e0b'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial,sans-serif' font-weight='900' font-size='16' fill='%23000'%3EOT%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap"
+    rel="stylesheet">
+  <script type="module" crossorigin src="/assets/main-L7CQzAXL.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/dist-DzQ6C2DZ.js">
+  <link rel="stylesheet" crossorigin href="/assets/main-LkQ-wgMd.css">
+</head>
+
+<body>
+  <!-- MOBILE BLOCKER -->
+  <div id="mobileBlocker"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#09090b; z-index:99999; flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center;">
+    <div
+      style="background:#f59e0b; color:#000; font-family:'Space Grotesk', sans-serif; font-weight:900; font-size:32px; width:80px; height:80px; border-radius:16px; display:flex; align-items:center; justify-content:center; margin-bottom:24px;">
+      OT</div>
+    <h2
+      style="color:#ffffff; font-family:'Space Grotesk', sans-serif; font-weight:700; margin-bottom:12px; font-size:24px;">
+      Desktop Apenas</h2>
+    <p style="color:#a1a1aa; font-family:'Inter', sans-serif; font-size:15px; max-width:320px; line-height:1.6;">O
+      Overtalk requer recursos avançados de captura de áudio.<br><br>Por favor, acesse o sistema utilizando um
+      computador (PC ou Mac).</p>
+  </div>
+
+  <script>
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 800) {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('mobileBlocker').style.display = 'flex';
+        const shell = document.querySelector('.app-shell');
+        if (shell) shell.style.display = 'none';
+      });
+    }
+  </script>
+
+  <div class="app-shell">
+
+    <!-- ═══ HEADER ═══ -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-ot">OT</div>
+        <div>
+          <h1>OVERTALK</h1>
+          <p class="header-sub">A SALA DO RÁDIO</p>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="session-pill" id="sessionPill">
+          <span class="live-dot"></span>
+          <span id="sessionTimer">00:00:00</span>
+          <span style="color: var(--text-muted);">|</span>
+          <span id="sessionStatus" style="font-size:11px;">Sistema offline</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <a href="/account.html" class="account-btn" id="btnAccount">
+          <div class="avatar-circle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </div>
+          <div>
+            <span style="font-size:12px;font-weight:700;line-height:1.2;display:block;">Minha Conta</span>
+            <span id="userEmail"
+              style="font-size:9px;color:var(--text-sub);line-height:1.2;display:block;">Carregando...</span>
+          </div>
+        </a>
+        <button id="btnLogout" class="btn-logout">SAIR</button>
+      </div>
+    </header>
+
+    <!-- ═══ LIVE FEED (left) ═══ -->
+    <main class="feed-pane">
+      <div class="feed-header">
+        <div class="feed-label" id="feedLabel">Fluxo de Tradução</div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <select id="langSelect" class="input-modern" style="padding:5px 10px; font-size:12px; width:auto;">
+            <option value="pt-en">🇧🇷 PT ↔ EN 🇺🇸</option>
+            <option value="es-en">🇪🇸 ES ↔ EN 🇺🇸</option>
+          </select>
+
+        </div>
+      </div>
+      <div id="transcriptBox">
+        <div id="emptyGuide" class="empty-guide" style="display:none;">
+        </div>
+      </div>
+      <!-- Feed Footer -->
+      <div class="feed-footer">
+        <button class="feed-footer-btn" onclick="document.getElementById('btnExport').click()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7,10 12,15 17,10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Exportar Transcrição
+        </button>
+        <button class="feed-footer-btn" onclick="openGuideModal()">
+          <span
+            style="width:16px;height:16px;border-radius:50%;background:var(--amber);color:#000;font-weight:900;font-size:11px;display:inline-flex;align-items:center;justify-content:center;">?</span>
+          Guia Rápido
+        </button>
+      </div>
+    </main>
+
+    <!-- ═══ SIDEBAR (right) ═══ -->
+    <aside class="sidebar">
+
+      <!-- System Audio -->
+      <div class="sidebar-card card-system">
+        <div class="card-label">
+          Áudio do Sistema
+          <span class="status-badge" id="statusSystem">OFFLINE</span>
+        </div>
+        <div class="vu-track">
+          <div id="meterSystem" class="vu-fill vu-system"></div>
+        </div>
+        <div class="node-controls">
+          <select id="systemDeviceSelect" class="input-modern" style="font-size:11px;">
+            <option value="screen">🖥️ Compartilhar Tela (Navegador)</option>
+          </select>
+          <div style="display:flex;gap:6px;">
+            <input type="text" id="speakerName" class="input-modern" placeholder="Apelido do Falante" style="flex:1;">
+            <button id="btnRegisterVoice" class="btn-action"
+              style="width:auto;white-space:nowrap;padding:8px 12px;">Memorizar</button>
+          </div>
+          <button id="btnStartSystem" class="btn-start">INICIAR COMPARTILHAMENTO</button>
+        </div>
+      </div>
+
+      <!-- Microfone -->
+      <div class="sidebar-card card-mic">
+        <div class="card-label">
+          Microfone
+          <span class="status-badge" id="statusMic">OFFLINE</span>
+        </div>
+        <div class="vu-track">
+          <div id="meterMic" class="vu-fill vu-mic"></div>
+        </div>
+        <div class="node-controls">
+          <select id="micDeviceSelect" class="input-modern" style="font-size:11px;">
+            <option value="default">🎙️ Microfone Padrão</option>
+          </select>
+          <label class="toggle-label">
+            <input type="checkbox" id="chkPTT" class="toggle-checkbox">
+            <span>Modo PTT (Shift Direito)</span>
+          </label>
+          <div class="sensitivity-row">
+            <span class="sens-label">Sensibilidade</span>
+            <input type="range" id="rangeSensitivity" min="0.001" max="0.05" step="0.001" value="0.01"
+              class="slider-modern">
+          </div>
+          <button id="btnStartMic" class="btn-start btn-start-mic">INICIAR MICROFONE (SOLO)</button>
+        </div>
+      </div>
+
+      <!-- Sala Privada (QR + PIN, always visible) -->
+      <div class="sidebar-card card-pairing">
+        <div class="card-label">
+          Sala Privada
+          <span class="status-badge" id="statusPairing">AGUARDANDO</span>
+        </div>
+        <div class="pin-display" id="pinDisplay">------</div>
+        <button id="btnActivateRoom" class="btn-action" style="width:100%;margin-bottom:12px;background:linear-gradient(135deg,var(--amber),var(--amber-dim));color:#000;">
+          Ativar Sala Privada
+        </button>
+        <div class="qr-wrap">
+          <div class="qr-img-box" id="qrCodeContainer" style="display:none;">
+            <img id="qrCodeImg" src="" alt="QR Code" />
+          </div>
+          <div class="tunnel-link" id="tunnelUrl">Clique em "Ativar Sala Privada" para gerar PIN e QR-code</div>
+        </div>
+        <div class="mobile-status" id="mobileStatus">
+          <span class="mobile-dot"></span>
+          <span id="mobileStatusText">Aguardando dispositivo...</span>
+        </div>
+      </div>
+
+      <!-- Session Stats -->
+      <div class="sidebar-card">
+        <div class="card-label">Estatísticas</div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value" id="statWords">0</div>
+            <div class="stat-label">Palavras</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statMessages">0</div>
+            <div class="stat-label">Mensagens</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statLatency">—</div>
+            <div class="stat-label">Latência ms</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statDevices">0</div>
+            <div class="stat-label">Dispositivos</div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ═══ FOOTER CONTROLS ═══ -->
+    <footer class="control-bar">
+      <div class="control-group">
+        <span class="ctrl-label">Status</span>
+        <span class="status-badge" id="statusBackend">Backend Offline</span>
+      </div>
+      <div class="control-group" style="flex:1; justify-content:center; border:none;">
+        <span class="ctrl-label" style="color: var(--text-muted); font-size:11px;">
+          Inicie o sistema — clique em <strong>INICIAR COMPARTILHAMENTO</strong> ou <strong>INICIAR MICROFONE
+            (SÓLO)</strong>
+        </span>
+      </div>
+      <div class="control-group">
+        <span class="ctrl-label">Feedback</span>
+        <button id="btnFeedback2" class="btn-ghost-sm"
+          style="border:none;background:transparent;cursor:pointer;color:var(--amber);font-size:12px;">Enviar</button>
+      </div>
+    </footer>
+
+  </div><!-- end .app-shell -->
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Deixe seu Feedback</h2>
+        <button id="btnCloseFeedback" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-subtitle">Sua opinião é anônima e nos ajuda a melhorar o OverTalk.</p>
+
+        <label class="fb-label">Avaliação</label>
+        <div class="fb-stars" id="fbStars">
+          <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span><span
+            data-val="4">★</span><span data-val="5">★</span>
+        </div>
+
+        <label class="fb-label">Categoria</label>
+        <select id="fbCategory" class="input-modern">
+          <option value="sugestao">Ideia / Sugestão</option>
+          <option value="bug">Reportar um Bug / Erro</option>
+          <option value="elogio">Elogio</option>
+          <option value="outro">Outro</option>
+        </select>
+
+        <label class="fb-label">Mensagem (opcional)</label>
+        <textarea id="fbMessage" class="input-modern" rows="4"
+          placeholder="O que você achou? O que pode melhorar?"></textarea>
+
+        <button id="btnSubmitFeedback" class="btn-action"
+          style="margin-top: 15px; background: linear-gradient(135deg, var(--amber), var(--amber-dim)); color: #000; border:none;">Enviar
+          Feedback Anônimo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guia Rápido Modal -->
+  <div id="guiaModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Guia Rápido</h2>
+        <button class="btn-close" onclick="closeGuideModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="guide-step" style="margin-bottom:16px;">
+          <span class="guide-num">1</span>
+          <div>
+            <strong>Fale no microfone</strong>
+            <p>Para começar a traduzir a sua voz, basta clicar em <strong>Iniciar Microfone</strong> no painel direito. Use o controle de sensibilidade para ajustar a captação da sua voz.</p>
+          </div>
+        </div>
+        <div class="guide-step" style="margin-bottom:16px;">
+          <span class="guide-num">2</span>
+          <div>
+            <strong>O Modo Solo e o uso conjunto</strong>
+            <p>O modo <strong>Solo</strong> é ideal para treinar a sua pronúncia em inglês ou focar apenas na sua própria voz. Mas lembre-se: você pode (e deve!) usá-lo junto com o áudio do sistema para ter uma conversa completa com outras pessoas.</p>
+          </div>
+        </div>
+        <div class="guide-step" style="margin-bottom:16px;">
+          <span class="guide-num">3</span>
+          <div>
+            <strong>Compartilhe o áudio do sistema</strong>
+            <p>Quer traduzir a voz dos seus amigos no Discord, um jogo ou vídeo? Ative o <strong>Áudio do Sistema</strong> no painel, escolha a aba ou janela desejada e o navegador fará a captura.</p>
+          </div>
+        </div>
+        <div class="guide-step" style="margin-bottom:16px;">
+          <span class="guide-num">4</span>
+          <div>
+            <strong>Legendas na palma da mão</strong>
+            <p>Toda a conversa traduzida aparece em tempo real no feed da tela. Você também pode apontar a câmera para o <strong>QR Code</strong> e acompanhar as legendas diretamente pelo seu celular!</p>
+          </div>
+        </div>
+        <div class="guide-step" style="margin-bottom:0;">
+          <span class="guide-num">5</span>
+          <div>
+            <strong>Sala Privada com QR Code</strong>
+            <p>Clique em <strong>"Ativar Sala Privada"</strong> no painel direito para gerar um PIN de 6 dígitos e um QR Code. Qualquer pessoa que escanear esse código será conectada diretamente à sua sala e verá as legendas em tempo real. <strong>O PIN expira a cada 2 minutos</strong> por segurança.</p>
+            <p style="margin-top:8px;font-size:12px;color:var(--text-sub);"><strong>Como funciona:</strong></p>
+            <ul style="margin:6px 0;padding-left:16px;font-size:12px;color:var(--text-sub);">
+              <li>✓ Clique "Ativar Sala Privada" → PIN é gerado</li>
+              <li>✓ Compartilhe o QR Code com outras pessoas</li>
+              <li>✓ Eles apontam câmera pro QR → conectam automaticamente</li>
+              <li>✓ Todos veem as mesmas legendas em tempo real</li>
+              <li>✓ Seguro: PIN expira e é renovado automaticamente</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openGuideModal() {
+      document.getElementById('guiaModal').classList.remove('hidden');
+    }
+    function closeGuideModal() {
+      document.getElementById('guiaModal').classList.add('hidden');
+    }
+    // Close modals on overlay click
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+
+</html>

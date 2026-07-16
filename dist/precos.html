@@ -1,0 +1,153 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>OverTalk | Planos e Preços</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23f59e0b'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial,sans-serif' font-weight='900' font-size='16' fill='%23000'%3EOT%3C/text%3E%3C/svg%3E" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+  body {
+    background-color: #131315;
+    color: #e5e1e4;
+    overflow-x: hidden;
+  }
+  .glass-panel {
+    background: rgba(13, 27, 42, 0.6);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .amber-glow-button:hover {
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
+  }
+  .plan-card {
+    transition: transform 0.3s, border-color 0.3s;
+    position: relative;
+  }
+  .plan-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.2) !important;
+  }
+  .plan-card.featured {
+    border-color: #f59e0b;
+    box-shadow: 0 0 30px rgba(245,158,11,0.22);
+  }
+  .plan-card .free-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: #f59e0b; color: #472a00; font-size: 10px; font-weight: 800;
+    padding: 4px 14px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .plan-features li {
+    padding: 8px 0;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  @media (max-width: 1024px) {
+    .plan-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  }
+  @media (max-width: 768px) {
+    .plan-grid { grid-template-columns: 1fr !important; }
+    .hero-title { font-size: 32px !important; }
+    .nav-desktop { display: none; }
+  }
+</style>
+  <link rel="stylesheet" crossorigin href="/assets/tailwind-CMQKk8LJ.css">
+</head>
+<body class="font-body-md text-on-surface selection:bg-primary-container/30">
+<!-- Header igual ao da landing -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+<div class="flex justify-between items-center px-container-padding-mobile sm:px-container-padding-desktop max-w-7xl mx-auto h-20">
+<a class="font-display-lg text-headline-md tracking-tighter text-primary" href="/landing.html">← Voltar</a>
+<nav class="nav-desktop hidden md:flex items-center gap-gutter">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="/landing.html#recursos">Recursos</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="/landing.html#integracoes">Integrações</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="/precos.html">Preços</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="/landing.html#duvidas">Dúvidas</a>
+</nav>
+<div class="flex items-center gap-base">
+<button class="bg-primary-container text-on-primary font-bold px-4 sm:px-6 py-2.5 rounded-full scale-95 active:scale-90 transition-all amber-glow-button" onclick="window.location.href='/login.html'">Entrar</button>
+</div>
+</div>
+</header>
+
+<main class="pt-32 pb-stack-lg px-container-padding-mobile sm:px-container-padding-desktop max-w-7xl mx-auto">
+  <!-- Header da página -->
+  <div class="text-center mb-stack-lg">
+    <div class="inline-block px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary font-label-caps text-label-caps mb-4">TABELA DE PREÇOS 2026</div>
+    <h1 class="font-display-lg text-display-lg-mobile sm:text-display-lg text-white leading-tight mb-4 hero-title">Planos que Escalam com sua <span class="text-primary-container">Ambição</span></h1>
+    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto">De tradução pessoal instantânea a soluções corporativas com criptografia total.</p>
+  </div>
+
+  <!-- Grid de planos -->
+  <div class="plan-grid grid grid-cols-4 gap-gutter max-w-6xl mx-auto">
+    <!-- Grátis -->
+    <div class="plan-card featured glass-panel rounded-2xl p-8 flex flex-col border border-primary/20">
+      <div class="free-badge">GRÁTIS</div>
+      <div class="font-label-caps text-label-caps text-primary mb-2">PESSOAL</div>
+      <div class="font-display-lg text-[40px] font-bold text-white mb-1">R$0</div>
+      <h3 class="font-headline-md text-headline-md text-white mb-6">Plano Grátis</h3>
+      <ul class="plan-features flex-1 mb-7">
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>30 min/mês</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Tradução básica (1 idioma)</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Acesso ao Discord</li>
+      </ul>
+      <a href="/login.html" class="block w-full text-center bg-primary-container text-on-primary font-bold py-3.5 rounded-xl shadow-lg amber-glow-button transition-all hover:scale-[1.02] active:scale-95 font-body-md">Começar Agora</a>
+    </div>
+
+    <!-- Profissional -->
+    <div class="plan-card glass-panel rounded-2xl p-8 flex flex-col border border-white/10 opacity-60">
+      <div class="font-label-caps text-label-caps text-primary mb-2">PROFISSIONAL</div>
+      <div class="font-display-lg text-[40px] font-bold text-white mb-1">R$0 <span class="text-body-md text-on-surface-variant font-body-md">/mês</span></div>
+      <h3 class="font-headline-md text-headline-md text-white mb-6">Plano Profissional</h3>
+      <ul class="plan-features flex-1 mb-7">
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>500 min/mês</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Tradução simultânea (2 idiomas)</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Prioridade de processamento</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Suporte via e-mail</li>
+      </ul>
+      <span class="block w-full text-center bg-white/5 text-white/40 font-bold py-3.5 rounded-xl border border-white/5 cursor-not-allowed font-body-md text-sm">Em breve na Beta</span>
+    </div>
+
+    <!-- Power User -->
+    <div class="plan-card glass-panel rounded-2xl p-8 flex flex-col border border-white/10 opacity-60">
+      <div class="font-label-caps text-label-caps text-primary mb-2">POWER USER</div>
+      <div class="font-display-lg text-[40px] font-bold text-white mb-1">R$0 <span class="text-body-md text-on-surface-variant font-body-md">/mês</span></div>
+      <h3 class="font-headline-md text-headline-md text-white mb-6">Plano Power User</h3>
+      <ul class="plan-features flex-1 mb-7">
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Minutos ilimitados</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>IA de voz alta fidelidade</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Tradução multi-idiomas</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Suporte 24/7</li>
+      </ul>
+      <span class="block w-full text-center bg-white/5 text-white/40 font-bold py-3.5 rounded-xl border border-white/5 cursor-not-allowed font-body-md text-sm">Em breve na Beta</span>
+    </div>
+
+    <!-- Corporate -->
+    <div class="plan-card glass-panel rounded-2xl p-8 flex flex-col border border-white/10 opacity-60">
+      <div class="font-label-caps text-label-caps text-primary mb-2">CORPORATIVO</div>
+      <div class="font-display-lg text-[40px] font-bold text-white mb-1">R$0 <span class="text-body-md text-on-surface-variant font-body-md">/mês</span></div>
+      <h3 class="font-headline-md text-headline-md text-white mb-6">Plano Corporate</h3>
+      <ul class="plan-features flex-1 mb-7">
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Dialetos ilimitados</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Criptografia de ponta a ponta</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Painel administrativo</li>
+        <li><span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>Gerente de conta dedicado</li>
+      </ul>
+      <span class="block w-full text-center bg-white/5 text-white/40 font-bold py-3.5 rounded-xl border border-white/5 cursor-not-allowed font-body-md text-sm">Em breve na Beta</span>
+    </div>
+  </div>
+</main>
+
+<!-- Footer igual ao da landing -->
+<footer class="w-full py-stack-lg border-t border-outline-variant/30 bg-surface-container-lowest py-12 mt-stack-lg">
+<div class="flex flex-col md:flex-row justify-between items-center px-container-padding-mobile sm:px-container-padding-desktop max-w-7xl mx-auto gap-stack-md">
+<div class="flex flex-wrap justify-center gap-6 sm:gap-gutter text-on-surface-variant font-body-md text-sm"><div class="flex flex-col items-center gap-4"><div class="flex gap-6 items-center mb-2"><a href="https://www.instagram.com/tayronne.dev?igsh=MWswcGNhbWhlMW4zdw==" target="_blank" class="hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-lg">photo_camera</span><span class="hidden sm:inline">Instagram</span></a><a href="https://www.linkedin.com/in/tayronne-silva/" target="_blank" class="hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-lg">work</span><span class="hidden sm:inline">LinkedIn</span></a><a href="#" class="hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-lg">forum</span><span class="">2ronne</span></a></div><a class="hover:text-primary transition-colors font-medium border-b border-primary/30 pb-0.5" href="mailto:ttayronne.dev@gmail.com">Suporte</a></div></div>
+<div class="text-on-surface-variant font-body-md text-xs text-center md:text-right">© 2026 OverTalk AI. Tradução de precisão para a elite global.</div>
+</div>
+</footer>
+</body>
+</html>
