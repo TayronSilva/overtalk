@@ -483,6 +483,15 @@
     </div>
 
 <script>
+    // --- ERROR LOGGER FOR MOBILE ---
+    window.onerror = function(msg, url, line, col, error) {
+        alert("Erro JS: " + msg + "\nLinha: " + line);
+        return false;
+    };
+    window.addEventListener('unhandledrejection', function(event) {
+        alert("Erro API/Fetch: " + event.reason);
+    });
+    // -------------------------------
     const BACKEND_URL = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1') 
         ? 'http://localhost:7860' 
         : 'https://tayronne-overtalk-backend.hf.space';
