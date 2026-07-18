@@ -2,5 +2,16 @@
   "buildCommand": null,
   "outputDirectory": "dist",
   "installCommand": null,
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/:path*",           "destination": "https://tayronne-overtalk-backend.hf.space/api/:path*" },
+    { "source": "/events",               "destination": "https://tayronne-overtalk-backend.hf.space/events" },
+    { "source": "/translate",            "destination": "https://tayronne-overtalk-backend.hf.space/translate" },
+    { "source": "/history_sync",         "destination": "https://tayronne-overtalk-backend.hf.space/history_sync" },
+    { "source": "/trigger",              "destination": "https://tayronne-overtalk-backend.hf.space/trigger" },
+    { "source": "/register_voice",       "destination": "https://tayronne-overtalk-backend.hf.space/register_voice" },
+    { "source": "/list_speakers",        "destination": "https://tayronne-overtalk-backend.hf.space/list_speakers" },
+    { "source": "/delete_speaker",       "destination": "https://tayronne-overtalk-backend.hf.space/delete_speaker" }
+  ]
 }
+
